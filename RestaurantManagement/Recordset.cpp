@@ -1,0 +1,245 @@
+#include "Recordset.h"
+#include <iostream>
+
+#include <string>
+
+Recordset::Recordset():
+	m_numColumns(0), m_numRows(0), m_firstColumn(NULL),
+	m_currentColumn(NULL), m_lastColumn(NULL)
+{
+
+}
+
+Recordset::~Recordset(){
+	removeAll();
+}
+
+void Recordset::addField(std::string columnName){
+	
+	DataColumn* newColumn = new DataColumn;
+
+	newColumn->setColumnName(columnName);
+
+	if ( m_firstColumn == NULL ) {
+
+		newColumn->setNext(NULL);
+		newColumn->setPrev(NULL);
+
+		m_firstColumn = newColumn;
+		m_lastColumn = newColumn;
+
+	} else {
+
+		newColumn->setNext(NULL);
+		newColumn->setPrev(m_lastColumn);
+
+		m_lastColumn->setNext(newColumn);
+
+		m_lastColumn = newColumn;
+
+	}
+
+	m_numColumns++;
+
+}
+
+DataColumn Recordset::fields(std::string fieldName){
+
+	DataColumn temp;
+
+	if ( m_firstColumn == NULL ) {
+		return temp;
+	}
+
+	DataColumn* currentCol = m_firstColumn;
+
+	while ( ( currentCol->getColumnName() != fieldName ) ) {
+		
+		currentCol = currentCol->getNext();
+		if ( currentCol == NULL ){
+			return temp;
+		}
+	}
+
+	m_currentColumn = currentCol;
+
+	return *(currentCol);
+
+}
+
+void Recordset::moveFirst(){
+
+	if ( m_firstColumn == NULL ) {
+		return;
+	}
+
+	DataColumn* currentCol = m_firstColumn;
+
+	while ( currentCol != NULL ) {
+		currentCol->moveFirst();
+		currentCol = currentCol->getNext();
+	}
+
+}
+
+void Recordset::moveNext(){
+
+	if ( m_firstColumn == NULL ) {
+		return;
+	}
+
+	DataColumn* currentCol = m_firstColumn;
+
+	while ( currentCol != NULL ) {
+		currentCol->moveNext();
+		currentCol = currentCol->getNext();
+	}
+
+}
+
+void Recordset::movePrev(){
+
+	if ( m_firstColumn == NULL ) {
+		return;
+	}
+
+	DataColumn* currentCol = m_firstColumn;
+
+	while ( currentCol != NULL ) {
+		currentCol->movePrev();
+		currentCol = currentCol->getNext();
+	}
+
+}
+
+void Recordset::moveLast(){
+
+	if ( m_firstColumn == NULL ) {
+		return;
+	}
+
+	DataColumn* currentCol = m_firstColumn;
+
+	while ( currentCol != NULL ) {
+		currentCol->moveLast();
+		currentCol = currentCol->getNext();
+	}
+
+}
+
+int Recordset::getColumns(){
+	return m_numColumns;
+}
+
+int Recordset::getRows(){
+	return m_numRows;
+}
+
+void Recordset::addRow(){
+	
+	if ( m_firstColumn == NULL ) {
+		return;
+	}
+
+	DataColumn* currentCol = m_firstColumn;
+
+	while ( currentCol != NULL ) {
+		currentCol->addRow();
+		currentCol = currentCol->getNext();
+	}
+
+	m_numRows++;
+
+	moveLast();
+
+}
+
+void Recordset::writeToFile(){
+
+}
+
+void Recordset::loadFromfile(std::string fileName, std::string delimiter){
+	
+	std::ifstream file(fileName);
+
+
+	if ( !file.fail() ) {
+
+		int lines = 0;
+		int cols = 0;
+		std::string buffer;
+
+
+		while ( std::getline(file, buffer, '\n') ) {
+
+			int position = 0;
+
+			if ( lines == 0 ) {
+
+				while ( ( position = buffer.find(delimiter)) != std::string::npos ) {
+					addField( buffer.substr( 0, position ) );
+					buffer.erase(0, position + delimiter.length() );
+
+					cols++;
+				}
+
+
+			} else {
+				
+				addRow();
+
+				DataColumn* currentCol = m_firstColumn;
+
+				while ( ( position = buffer.find(delimiter)) != std::string::npos ) {
+					fields(currentCol->getColumnName()) = buffer.substr(0, position);
+					buffer.erase(0, position + delimiter.length() );
+					currentCol = currentCol->getNext();
+
+				}
+
+			}
+			lines++;
+		}
+
+		m_numRows = lines - 1;
+		m_numColumns = cols;
+
+	}
+	
+
+}
+
+
+void Recordset::removeAll(){
+
+
+	if ( m_firstColumn == NULL ) {
+		return;
+	}
+
+	DataColumn* currentCol = m_firstColumn;
+	DataColumn* colToDelete;
+
+	while ( currentCol->getNext() != NULL ) {
+
+		colToDelete = currentCol;
+
+		currentCol = currentCol->getNext();
+
+		colToDelete->removeAll();
+		colToDelete->setNext(NULL);
+		colToDelete->setPrev(NULL);
+		colToDelete->setColumnName("");
+
+		delete colToDelete;
+
+	}
+
+	m_firstColumn = NULL;
+	m_lastColumn = NULL;
+	m_currentColumn = NULL;
+
+	m_numColumns = 0;
+	m_numRows = 0;
+
+}
