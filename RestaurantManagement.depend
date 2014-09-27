@@ -1,0 +1,31 @@
+# depslib dependency file v1.0
+1411793256 source:c:\users\chris\documents\github\restaurantmanagement\datacolumn.cpp
+	"DataColumn.h"
+
+1411621162 c:\users\chris\documents\github\restaurantmanagement\datacolumn.h
+	"DataRow.h"
+	<string>
+	<iostream>
+
+1411621162 c:\users\chris\documents\github\restaurantmanagement\datarow.h
+	<string>
+
+1411621162 source:c:\users\chris\documents\github\restaurantmanagement\datarow.cpp
+	"DataRow.h"
+
+1411792899 source:c:\users\chris\documents\github\restaurantmanagement\main.cpp
+	<iostream>
+	"Recordset.h"
+
+1411792342 c:\users\chris\documents\github\restaurantmanagement\recordset.h
+	"DataColumn.h"
+	"DataRow.h"
+	<string>
+	<fstream>
+	<iostream>
+
+1411793092 source:c:\users\chris\documents\github\restaurantmanagement\recordset.cpp
+	"Recordset.h"
+	<iostream>
+	<string>
+
