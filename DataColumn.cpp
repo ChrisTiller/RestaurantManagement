@@ -39,7 +39,7 @@ void DataColumn::moveFirst(){
 }
 
 void DataColumn::moveNext(){
-	
+
 	if ( m_currentRow != m_lastRow ){
 		m_currentRow = m_currentRow->getNext();
 	}
@@ -73,7 +73,7 @@ void DataColumn::addRow(){
 		newRow->setPrev(m_lastRow);
 
 		m_lastRow->setNext(newRow);
-		
+
 		m_lastRow = newRow;
 	}
 

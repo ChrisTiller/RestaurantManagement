@@ -15,7 +15,7 @@ Recordset::~Recordset(){
 }
 
 void Recordset::addField(std::string columnName){
-	
+
 	DataColumn* newColumn = new DataColumn;
 
 	newColumn->setColumnName(columnName);
@@ -54,7 +54,7 @@ DataColumn Recordset::fields(std::string fieldName){
 	DataColumn* currentCol = m_firstColumn;
 
 	while ( ( currentCol->getColumnName() != fieldName ) ) {
-		
+
 		currentCol = currentCol->getNext();
 		if ( currentCol == NULL ){
 			return temp;
@@ -79,7 +79,7 @@ void Recordset::moveFirst(){
 		currentCol->moveFirst();
 		currentCol = currentCol->getNext();
 	}
-
+	m_currentRow = 1;
 }
 
 void Recordset::moveNext(){
@@ -94,7 +94,7 @@ void Recordset::moveNext(){
 		currentCol->moveNext();
 		currentCol = currentCol->getNext();
 	}
-
+	m_currentRow++;
 }
 
 void Recordset::movePrev(){
@@ -109,7 +109,7 @@ void Recordset::movePrev(){
 		currentCol->movePrev();
 		currentCol = currentCol->getNext();
 	}
-
+	m_currentRow--;
 }
 
 void Recordset::moveLast(){
@@ -124,7 +124,7 @@ void Recordset::moveLast(){
 		currentCol->moveLast();
 		currentCol = currentCol->getNext();
 	}
-
+	m_currentRow = m_numRows;
 }
 
 int Recordset::getColumns(){
@@ -136,7 +136,7 @@ int Recordset::getRows(){
 }
 
 void Recordset::addRow(){
-	
+
 	if ( m_firstColumn == NULL ) {
 		return;
 	}
@@ -154,14 +154,49 @@ void Recordset::addRow(){
 
 }
 
-void Recordset::writeToFile(){
+void Recordset::writeToFile(std::string fileName, std::string delimiter){
+
+	std::ofstream file( fileName.c_str(), std::ios::out | std::ios::trunc );
+
+	if ( !file.fail() ) {
+
+		DataColumn* currentCol = m_firstColumn;
+
+		while ( currentCol != NULL ) {
+
+			file << currentCol->getColumnName() << delimiter;
+			currentCol = currentCol->getNext();
+		}
+
+		file << '\n';
+
+		moveFirst();
+
+		for ( int i = 1 ; i <= getRows() ; i++ ){
+
+			currentCol = m_firstColumn;
+
+			while ( currentCol != NULL ) {
+
+				file << currentCol->getRowText() << delimiter;
+				currentCol = currentCol->getNext();
+			}
+
+			file << '\n';
+
+			moveNext();
+
+		}
+
+		file.close();
+
+	}
 
 }
 
 void Recordset::loadFromfile(std::string fileName, std::string delimiter){
-	
-	std::ifstream file(fileName);
 
+	std::ifstream file(fileName.c_str(), std::ios::in);
 
 	if ( !file.fail() ) {
 
@@ -177,20 +212,21 @@ void Recordset::loadFromfile(std::string fileName, std::string delimiter){
 			if ( lines == 0 ) {
 
 				while ( ( position = buffer.find(delimiter)) != std::string::npos ) {
+
 					addField( buffer.substr( 0, position ) );
 					buffer.erase(0, position + delimiter.length() );
 
 					cols++;
 				}
 
-
 			} else {
-				
+
 				addRow();
 
 				DataColumn* currentCol = m_firstColumn;
 
 				while ( ( position = buffer.find(delimiter)) != std::string::npos ) {
+
 					fields(currentCol->getColumnName()) = buffer.substr(0, position);
 					buffer.erase(0, position + delimiter.length() );
 					currentCol = currentCol->getNext();
@@ -205,13 +241,11 @@ void Recordset::loadFromfile(std::string fileName, std::string delimiter){
 		m_numColumns = cols;
 
 	}
-	
 
 }
 
 
 void Recordset::removeAll(){
-
 
 	if ( m_firstColumn == NULL ) {
 		return;

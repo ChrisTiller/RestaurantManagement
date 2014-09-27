@@ -3,7 +3,6 @@
 
 #include "DataColumn.h"
 #include "DataRow.h"
-#include "File.h"
 #include <string>
 #include <fstream>
 #include <iostream>
@@ -17,7 +16,6 @@ public:
 
 	void addField(std::string);
 	DataColumn fields(std::string);
-	//std::string fields(int);
 
 	void moveFirst();
 	void moveNext();
@@ -25,14 +23,16 @@ public:
 	void moveLast();
 
 	int getRows();
+	int getRow();
 	int getColumns();
 
 	void addRow();
+	void removeRow();
+	void removeAll();
 
-	void writeToFile();
+	void writeToFile(std::string, std::string);
 	void loadFromfile(std::string, std::string);
 
-	void removeAll();
 
 private:
 	DataColumn* m_firstColumn;
@@ -41,8 +41,7 @@ private:
 
 	int m_numRows;
 	int m_numColumns;
-
-	File m_file;
+	int m_currentRow;
 };
 
 #endif
