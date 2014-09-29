@@ -51,6 +51,10 @@ DataColumn Recordset::fields(std::string fieldName){
 		return temp;
 	}
 
+	if ( getRows() == 0 ){
+        return temp;
+	}
+
 	DataColumn* currentCol = m_firstColumn;
 
 	while ( ( currentCol->getColumnName() != fieldName ) ) {
@@ -135,6 +139,10 @@ int Recordset::getRows(){
 	return m_numRows;
 }
 
+int Recordset::getRow(){
+    return m_currentRow;
+}
+
 void Recordset::addRow(){
 
 	if ( m_firstColumn == NULL ) {
@@ -178,7 +186,7 @@ void Recordset::writeToFile(std::string fileName, std::string delimiter){
 
 			while ( currentCol != NULL ) {
 
-				file << currentCol->getRowText() << delimiter;
+				file << (*currentCol) << delimiter;
 				currentCol = currentCol->getNext();
 			}
 
@@ -276,4 +284,60 @@ void Recordset::removeAll(){
 	m_numColumns = 0;
 	m_numRows = 0;
 
+}
+
+Recordset Recordset::filter(std::string columnName, std::string filterCriteria){
+
+    Recordset filterRecordset;
+
+    DataColumn* currentCol = m_firstColumn;
+
+    while ( currentCol != NULL ){
+        filterRecordset.addField(currentCol->getColumnName());
+        currentCol = currentCol->getNext();
+    }
+
+    if ( getRows() == 0 ){
+        return filterRecordset;
+    }
+
+    if ( columnExists(columnName) ) {
+
+        moveFirst();
+
+        while ( getRow() <= getRows() ){
+
+            if (m_currentColumn->getRowText() == filterCriteria ) {
+
+                filterRecordset.addRow();
+
+                currentCol = m_firstColumn;
+
+                while ( currentCol != NULL ){
+                    filterRecordset.fields(currentCol->getColumnName()) = currentCol->getRowText();
+                    currentCol = currentCol->getNext();
+                }
+            }
+            moveNext();
+        }
+    }
+
+    return filterRecordset;
+}
+
+bool Recordset::columnExists(std::string columnName){
+
+    DataColumn* currentCol = m_firstColumn;
+
+	while ( ( currentCol->getColumnName() != columnName ) ) {
+
+		currentCol = currentCol->getNext();
+		if ( currentCol == NULL ){
+			return false;
+		}
+	}
+
+    m_currentColumn = currentCol;
+
+    return true;
 }

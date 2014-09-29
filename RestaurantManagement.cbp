@@ -32,6 +32,12 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
+		<Unit filename="DataColumn.cpp" />
+		<Unit filename="DataColumn.h" />
+		<Unit filename="DataRow.cpp" />
+		<Unit filename="DataRow.h" />
+		<Unit filename="Recordset.cpp" />
+		<Unit filename="Recordset.h" />
 		<Unit filename="main.cpp" />
 		<Extensions>
 			<code_completion />

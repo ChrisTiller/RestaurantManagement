@@ -30,6 +30,8 @@ public:
 	void removeRow();
 	void removeAll();
 
+	Recordset filter(std::string, std::string);
+
 	void writeToFile(std::string, std::string);
 	void loadFromfile(std::string, std::string);
 
@@ -42,6 +44,8 @@ private:
 	int m_numRows;
 	int m_numColumns;
 	int m_currentRow;
+
+	bool columnExists(std::string);
 };
 
 #endif
