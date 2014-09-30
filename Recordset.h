@@ -7,8 +7,8 @@
 #include <fstream>
 #include <iostream>
 
-class Recordset{
-
+class Recordset
+{
 public:
 
 	Recordset();
@@ -22,13 +22,15 @@ public:
 	void movePrev();
 	void moveLast();
 
-	int getRows();
-	int getRow();
-	int getColumns();
+	int getRows() const;
+	int getRow() const;
+	int getColumns() const;
 
 	void addRow();
 	void removeRow();
 	void removeAll();
+
+	bool isEmpty() const;
 
 	Recordset filter(std::string, std::string);
 

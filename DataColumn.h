@@ -1,7 +1,6 @@
 #ifndef DATACOLUMN_H_INCLUDED
 #define DATACOLUMN_H_INCLUDED
 
-
 #include "DataRow.h"
 #include <string>
 #include <iostream>
@@ -12,26 +11,29 @@ public:
 
 	DataColumn();
 	~DataColumn();
-	
+
 	void setNext(DataColumn*);
-	DataColumn* getNext();
+	DataColumn* getNext() const;
 
 	void setPrev(DataColumn*);
-	DataColumn* getPrev();
+	DataColumn* getPrev() const;
 
-	std::string getColumnName();
 	void setColumnName(std::string);
+    std::string getColumnName() const;
 
 	void addRow();
+	void removeRow();
 
 	void moveFirst();
 	void moveNext();
 	void movePrev();
 	void moveLast();
 
-	std::string getRowText();
+	std::string getRowText() const;
 
 	void operator=(std::string);
+	bool operator==(std::string);
+	bool operator!=(std::string);
 	std::string operator()(std::string);
 	friend std::ostream& operator << (std::ostream&, const DataColumn&);
 

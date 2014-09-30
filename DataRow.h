@@ -12,13 +12,13 @@ public:
 	DataRow();
 
 	void setText(std::string);
-	std::string getText();
+	std::string getText() const;
 
 	void setNext(DataRow*);
-	DataRow* getNext();
+	DataRow* getNext() const;
 
 	void setPrev(DataRow*);
-	DataRow* getPrev();
+	DataRow* getPrev() const;
 
 
 private:
