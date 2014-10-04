@@ -102,14 +102,16 @@ std::string DataColumn::getRowText() const
 	return m_currentRow->getText();
 }
 
-void DataColumn::operator=(std::string rowText)
+void DataColumn::operator=(const std::string rowText)
 {
 	m_currentRow->setText(rowText);
 }
 
-std::string DataColumn::operator()(std::string fieldName)
+DataColumn& DataColumn::operator=(const DataColumn& dt)
 {
-	return m_currentRow->getText();
+    m_currentRow->setText(dt.getRowText());
+
+    return *this;
 }
 
 void DataColumn::removeAll()

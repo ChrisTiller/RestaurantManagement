@@ -11,11 +11,12 @@ class Recordset
 {
 public:
 
-	Recordset();
+	Recordset(std::string="", std::string="");
 	~Recordset();
 
 	void addField(std::string);
 	DataColumn fields(std::string);
+	DataColumn* getFirstColumn() const;
 
 	void moveFirst();
 	void moveNext();
@@ -29,13 +30,16 @@ public:
 	void addRow();
 	void removeRow();
 	void removeAll();
+	void update();
 
 	bool isEmpty() const;
 
+	bool columnExists(std::string);
+
 	Recordset filter(std::string, std::string);
 
-	void writeToFile(std::string, std::string);
-	void loadFromfile(std::string, std::string);
+	void writeToFile();
+	void loadFromFile();
 
 
 private:
@@ -47,7 +51,9 @@ private:
 	int m_numColumns;
 	int m_currentRow;
 
-	bool columnExists(std::string);
+	std::string m_fileName;
+	std::string m_delimiter;
+
 };
 
 #endif

@@ -1,29 +1,41 @@
 #include <iostream>
 #include "Recordset.h"
+#include "Employee.h"
+#include <cassert>
 
 using namespace std;
 
 int main()
 {
-    Recordset recordset1;
 
-    recordset1.loadFromfile("test.txt", ";");
+    Employee employees;
 
-    recordset1.moveFirst();
+    string mainCommand = "";
+    string rawInput = "";
 
-    for ( int i = 0; i < recordset1.getRows() ; i++ ){
+    bool done = false;
 
-        cout << recordset1.fields("FNAME") << " " << recordset1.fields("LNAME") << endl;
-        recordset1.moveNext();
+    while ( !done )
+    {
+
+        getline(cin, rawInput);
+
+        mainCommand = rawInput;
+
+        if ( mainCommand == "add" )
+        {
+            employees.addEmployee("Chris");
+        }
+        else if ( mainCommand == "view" )
+        {
+            employees.viewEmployees("  FNAME  ,");
+        }
+        else if ( mainCommand == "done" )
+        {
+            done = true;
+        }
 
     }
-
-    recordset1.addRow();
-
-    recordset1.fields("FNAME") = "Muath";
-    recordset1.fields("LNAME") = "Aldhubayb";
-
-    recordset1.writeToFile("test.txt", ";");
 
     return 0;
 }

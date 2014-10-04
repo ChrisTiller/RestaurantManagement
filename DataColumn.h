@@ -31,10 +31,12 @@ public:
 
 	std::string getRowText() const;
 
-	void operator=(std::string);
+    void operator=(const std::string);
+    DataColumn& operator=(const DataColumn&);
+    //operator string() const;
+    //operator int() const;
 	bool operator==(std::string);
 	bool operator!=(std::string);
-	std::string operator()(std::string);
 	friend std::ostream& operator << (std::ostream&, const DataColumn&);
 
 	void removeAll();
@@ -50,6 +52,7 @@ private:
 	std::string m_name;
 
 };
+
 
 
 #endif

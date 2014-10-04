@@ -38,6 +38,7 @@
 		<Unit filename="DataRow.h" />
 		<Unit filename="Recordset.cpp" />
 		<Unit filename="Recordset.h" />
+		<Unit filename="RecordsetExample.cpp" />
 		<Unit filename="main.cpp" />
 		<Extensions>
 			<code_completion />
