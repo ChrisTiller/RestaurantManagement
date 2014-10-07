@@ -29,6 +29,7 @@ void Recordset::addField(std::string columnName)
 	DataColumn* newColumn = new DataColumn;
 
 	newColumn->setColumnName(columnName);
+	newColumn->setMaxLength(columnName.length());
 
 	if ( m_firstColumn == NULL )
     {
@@ -56,7 +57,7 @@ void Recordset::addField(std::string columnName)
 
 }
 
-DataColumn Recordset::fields(std::string fieldName)
+DataColumn& Recordset::fields(std::string fieldName)
 {
 
 	DataColumn temp;
@@ -85,7 +86,7 @@ DataColumn Recordset::fields(std::string fieldName)
 
 	m_currentColumn = currentCol;
 
-	return *(currentCol);
+	return *(m_currentColumn);
 
 }
 
@@ -194,8 +195,6 @@ void Recordset::addRow()
 
 	m_numRows++;
 
-	moveLast();
-
 }
 
 void Recordset::update()
@@ -257,7 +256,6 @@ void Recordset::loadFromFile()
 		int cols = 0;
 		std::string buffer;
 
-
 		while ( std::getline(file, buffer, '\n') )
         {
 
@@ -295,7 +293,6 @@ void Recordset::loadFromFile()
 			}
 			lines++;
 		}
-
 		m_numRows = lines - 1;
 		m_numColumns = cols;
 	}
@@ -438,3 +435,102 @@ DataColumn* Recordset::getFirstColumn() const
     return m_firstColumn;
 }
 
+void Recordset::moveTo(int row)
+{
+
+    if ( (row > m_numRows) || ( row == m_currentRow ) || ( row <= 0 ) )
+    {
+        return;
+    }
+
+    int fromBeginning = row - 1;
+    int fromEnd = m_numRows - row;
+    int fromCurrent = m_currentRow - row;
+    int fromCurrentAbs = std::abs(fromCurrent);
+
+    if ( fromBeginning <= fromCurrentAbs )
+    {
+        if ( fromBeginning <= fromEnd )
+        {
+            moveFirst();
+            for ( int i = 1 ; i < row ; i++)
+            {
+                moveNext();
+            }
+            return;
+        }
+    }
+    if ( fromCurrentAbs <= fromBeginning )
+    {
+        if ( fromCurrentAbs <= fromEnd )
+        {
+            if ( fromCurrentAbs == fromCurrent )
+            {
+                for ( int i = m_currentRow ; i > row ; i--)
+                {
+                    movePrev();
+                }
+                return;
+            }
+            else
+            {
+                for ( int i = m_currentRow ; i < row ; i++)
+                {
+                    moveNext();
+                }
+                return;
+            }
+        }
+    }
+    if ( fromEnd <= fromBeginning )
+    {
+        if ( fromEnd <= fromCurrentAbs )
+        {
+            moveLast();
+            for ( int i = m_numRows ; i > row ; i--)
+            {
+                movePrev();
+            }
+            return;
+        }
+    }
+}
+
+std::vector<std::string> Recordset::getColumnHeaders()
+{
+
+    std::vector<std::string> cols;
+
+    if ( m_firstColumn == NULL )
+    {
+        return cols;
+    }
+
+    DataColumn* currenctCol = m_firstColumn;
+
+    while ( currenctCol != NULL )
+    {
+        cols.push_back(currenctCol->getColumnName());
+        currenctCol = currenctCol->getNext();
+    }
+
+    return cols;
+
+}
+
+int Recordset::getRowLength(std::vector<std::string> columns)
+{
+
+    if ( m_firstColumn == NULL )
+    {
+        return 0;
+    }
+
+    int length = 0;
+
+    for ( int i = 0 ; i < columns.size() ; i++ )
+	{
+		length += fields(columns.at(i)).getMaxLength();
+	}
+    return length;
+}

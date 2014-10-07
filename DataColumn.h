@@ -4,6 +4,9 @@
 #include "DataRow.h"
 #include <string>
 #include <iostream>
+#include <math.h>
+#include <cassert>
+#include <sstream>
 
 class DataColumn{
 
@@ -29,9 +32,14 @@ public:
 	void movePrev();
 	void moveLast();
 
+	void setMaxLength(int);
+	int getMaxLength();
+
 	std::string getRowText() const;
 
     void operator=(const std::string);
+    void operator=(const int);
+    void operator=(const double);
     DataColumn& operator=(const DataColumn&);
     //operator string() const;
     //operator int() const;
@@ -50,7 +58,7 @@ private:
 	DataColumn* m_prev;
 
 	std::string m_name;
-
+    int m_maxLength;
 };
 
 

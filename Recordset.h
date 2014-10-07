@@ -6,6 +6,8 @@
 #include <string>
 #include <fstream>
 #include <iostream>
+#include <cmath>
+#include <vector>
 
 class Recordset
 {
@@ -15,17 +17,19 @@ public:
 	~Recordset();
 
 	void addField(std::string);
-	DataColumn fields(std::string);
+	DataColumn& fields(std::string);
 	DataColumn* getFirstColumn() const;
 
 	void moveFirst();
 	void moveNext();
 	void movePrev();
 	void moveLast();
+	void moveTo(int);
 
 	int getRows() const;
 	int getRow() const;
 	int getColumns() const;
+    int getRowLength(std::vector<std::string>);
 
 	void addRow();
 	void removeRow();
@@ -41,6 +45,7 @@ public:
 	void writeToFile();
 	void loadFromFile();
 
+    std::vector<std::string> getColumnHeaders();
 
 private:
 	DataColumn* m_firstColumn;

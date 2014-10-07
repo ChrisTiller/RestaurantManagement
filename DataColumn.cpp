@@ -3,7 +3,8 @@
 
 DataColumn::DataColumn():
 	m_name(""), m_next(NULL), m_prev(NULL),
-	m_firstRow(NULL), m_lastRow(NULL), m_currentRow(NULL)
+	m_firstRow(NULL), m_lastRow(NULL), m_currentRow(NULL),
+	m_maxLength(0)
 {
 }
 
@@ -83,7 +84,8 @@ void DataColumn::addRow()
 
 		m_firstRow = newRow;
 		m_lastRow = newRow;
-	} else
+	}
+	else
     {
 		newRow->setNext(NULL);
 		newRow->setPrev(m_lastRow);
@@ -93,7 +95,7 @@ void DataColumn::addRow()
 		m_lastRow = newRow;
 	}
 
-	moveLast();
+	m_currentRow = m_lastRow;
 
 }
 
@@ -105,6 +107,11 @@ std::string DataColumn::getRowText() const
 void DataColumn::operator=(const std::string rowText)
 {
 	m_currentRow->setText(rowText);
+
+	if ( rowText.length() > m_maxLength )
+    {
+        m_maxLength = rowText.length();
+    }
 }
 
 DataColumn& DataColumn::operator=(const DataColumn& dt)
@@ -248,4 +255,28 @@ bool DataColumn::operator==(std::string value)
 bool DataColumn::operator!=(std::string value)
 {
     return !operator==(value);
+}
+
+void DataColumn::operator=(const int rhs)
+{
+    std::stringstream ss;
+    ss << rhs;
+    m_currentRow->setText(ss.str());
+}
+
+void DataColumn::operator=(const double rhs)
+{
+    std::stringstream ss;
+    ss << rhs;
+    m_currentRow->setText(ss.str());
+}
+
+void DataColumn::setMaxLength(int length)
+{
+    m_maxLength = length;
+}
+
+int DataColumn::getMaxLength()
+{
+    return m_maxLength;
 }

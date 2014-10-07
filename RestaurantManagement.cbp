@@ -36,10 +36,16 @@
 		<Unit filename="DataColumn.h" />
 		<Unit filename="DataRow.cpp" />
 		<Unit filename="DataRow.h" />
+		<Unit filename="Employee.cpp" />
+		<Unit filename="Employee.h" />
 		<Unit filename="Recordset.cpp" />
 		<Unit filename="Recordset.h" />
-		<Unit filename="RecordsetExample.cpp" />
+		<Unit filename="RecordsetExample.cpp">
+			<Option compile="0" />
+			<Option link="0" />
+		</Unit>
 		<Unit filename="main.cpp" />
+		<Unit filename="recordsetExaple.cpp" />
 		<Extensions>
 			<code_completion />
 			<envvars />

@@ -1,4 +1,11 @@
-FNAME;LNAME;PHONE;ADDRESS;WAGE;
-Chris;Chris;Chris;Chris;Chris;
-Chris;Chris;Chris;Chris;Chris;
-Chris;Chris;Chris;Chris;Chris;
+ID;First Name;Last Name;Phone Number;Address;Wage;
+1;Chris;Chris;Chris;Chris;Chris;
+2;Chris;Chris;Chris;Chris;Chris;
+3;Chris;Chris;Chris;Chris;Chris;
+4;Chris;;;;;
+5;Chris;Tiller;3044678864;;;
+6;Dylan;Kiser;3044678269;;;
+7;AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA;;;;;
+8;BSDFDDSDFADADDDSDADASDASDSADSADSDSADSADSDSDASDADASD;;;;;
+9;Lonnie;Bowe;;Concord;7.25;
+10;Chris;ADSDASDSASAASDASDASDSADSADSADSAD;;;;

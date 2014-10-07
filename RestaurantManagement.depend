@@ -1,32 +1,38 @@
 # depslib dependency file v1.0
-1412303734 source:c:\users\chris\documents\github\restaurantmanagement\datacolumn.cpp
+1412483232 source:c:\users\chris\documents\github\restaurantmanagement\datacolumn.cpp
 	"DataColumn.h"
 
-1412388246 c:\users\chris\documents\github\restaurantmanagement\datacolumn.h
+1412481009 c:\users\chris\documents\github\restaurantmanagement\datacolumn.h
 	"DataRow.h"
 	<string>
 	<iostream>
+	<math.h>
+	<cassert>
+	<sstream>
 
-1412117709 c:\users\chris\documents\github\restaurantmanagement\datarow.h
+1412212585 c:\users\chris\documents\github\restaurantmanagement\datarow.h
 	<string>
 
-1412117709 source:c:\users\chris\documents\github\restaurantmanagement\datarow.cpp
+1412212585 source:c:\users\chris\documents\github\restaurantmanagement\datarow.cpp
 	"DataRow.h"
 
-1412392058 source:c:\users\chris\documents\github\restaurantmanagement\main.cpp
+1412481810 source:c:\users\chris\documents\github\restaurantmanagement\main.cpp
 	<iostream>
 	"Recordset.h"
 	"Employee.h"
 	<cassert>
+	<math.h>
 
-1412390617 c:\users\chris\documents\github\restaurantmanagement\recordset.h
+1412484133 c:\users\chris\documents\github\restaurantmanagement\recordset.h
 	"DataColumn.h"
 	"DataRow.h"
 	<string>
 	<fstream>
 	<iostream>
+	<cmath>
+	<vector>
 
-1412390615 source:c:\users\chris\documents\github\restaurantmanagement\recordset.cpp
+1412485780 source:c:\users\chris\documents\github\restaurantmanagement\recordset.cpp
 	"Recordset.h"
 	<iostream>
 	<string>
@@ -42,10 +48,13 @@
 1412119838 c:\users\chris\documents\github\restaurantmanagement\user.h
 	<iostream>
 
-1412392085 source:c:\users\chris\documents\github\restaurantmanagement\employee.cpp
+1412479222 source:c:\users\chris\documents\github\restaurantmanagement\employee.cpp
 	"Employee.h"
 
-1412391443 c:\users\chris\documents\github\restaurantmanagement\employee.h
+1412481790 c:\users\chris\documents\github\restaurantmanagement\employee.h
 	"Recordset.h"
 	<iostream>
+	<vector>
+
+1412212585 source:c:\users\chris\documents\github\restaurantmanagement\recordsetexaple.cpp
 

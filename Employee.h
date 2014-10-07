@@ -18,15 +18,6 @@ enum EmployeeInfoFlags
 
 };
 
-struct EmployeeInfo
-{
-    std::string name = "";
-    std::string firstName = "";
-    std::string lastName = "";
-    std::string phone = "";
-    std::string address = "";
-    std::string wage = "";
-};
 
 class Employee
 {
@@ -57,6 +48,8 @@ private:
     Recordset m_employeeRecordset;
 
     std::string m_employeeSourceFile;
+
+    void fillArgs(std::vector<std::string>&, std::string);
 };
 
 std::string trim(std::string);
