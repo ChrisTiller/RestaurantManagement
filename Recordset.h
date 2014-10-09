@@ -9,6 +9,12 @@
 #include <cmath>
 #include <vector>
 
+struct ColumnRowIntersection
+{
+    std::string columnName;
+    std::string rowValue;
+};
+
 class Recordset
 {
 public:
@@ -29,7 +35,7 @@ public:
 	int getRows() const;
 	int getRow() const;
 	int getColumns() const;
-    int getRowLength(std::vector<std::string>);
+    int getRowLength(std::vector<ColumnRowIntersection>);
 
 	void addRow();
 	void removeRow();
@@ -42,10 +48,12 @@ public:
 
 	Recordset filter(std::string, std::string);
 
-	void writeToFile();
-	void loadFromFile();
+	void write();
+	void load();
 
-    std::vector<std::string> getColumnHeaders();
+	void printRecordset(std::string);
+
+    std::vector<ColumnRowIntersection> getColumnHeaders();
 
 private:
 	DataColumn* m_firstColumn;
@@ -56,6 +64,7 @@ private:
 	int m_numColumns;
 	int m_currentRow;
 
+    bool hiAutoNumber = true;
 	std::string m_fileName;
 	std::string m_delimiter;
 

@@ -1,10 +1,13 @@
 #include "Employee.h"
 #include <cstdlib>
 
+void fillArgs(std::vector<ColumnRowIntersection>&, std::string);
+std::string trim(std::string);
+
 Employee::Employee():
     m_employeeRecordset("C:\\Users\\Chris\\Documents\\GitHub\\RestaurantManagement\\Employees.txt", ";")
 {
-    m_employeeRecordset.loadFromFile();
+    m_employeeRecordset.load();
 }
 
 Employee::~Employee()
@@ -14,9 +17,7 @@ Employee::~Employee()
 void Employee::addEmployee(std::string args)
 {
 
-	system("cls");
-
-    std::vector<std::string> columnAndValues;
+    std::vector<ColumnRowIntersection> columnAndValues;
 
     fillArgs(columnAndValues, args);
 
@@ -29,21 +30,10 @@ void Employee::addEmployee(std::string args)
 
     for ( int i = 0 ; i < columnAndValues.size() ; i++ )
     {
-        if ( ( position = columnAndValues.at(i).find(":") ) == std::string::npos )
+        if ( !m_employeeRecordset.columnExists(columnAndValues.at(i).columnName) )
         {
-            if ( !m_employeeRecordset.columnExists(columnAndValues.at(i)) )
-            {
-                std::cout << "Column " << columnAndValues.at(i) << " doesn't exist." << std::endl;
-                return;
-            }
-        }
-        else
-        {
-            if ( !m_employeeRecordset.columnExists(columnAndValues.at(i).substr(0, position)) )
-            {
-                std::cout << "Column " << columnAndValues.at(i).substr(0, position) << " doesn't exist." << std::endl;
-                return;
-            }
+            std::cout << "Column " << columnAndValues.at(i).columnName << " doesn't exist." << std::endl;
+            return;
         }
     }
 
@@ -51,39 +41,69 @@ void Employee::addEmployee(std::string args)
 
     for ( int i = 0 ; i < columnAndValues.size() ; i++ )
     {
-        if ( ( position = columnAndValues.at(i).find(":") ) != std::string::npos )
-        {
-            m_employeeRecordset.fields(columnAndValues.at(i).substr(0, position)) = columnAndValues.at(i).substr(position+1, columnAndValues.at(i).length());
-        }
+            m_employeeRecordset.fields(columnAndValues.at(i).columnName) = columnAndValues.at(i).rowValue;
     }
 
-    m_employeeRecordset.writeToFile();
+    m_employeeRecordset.write();
 
     std::cout << "Employee added" << std::endl;
 
 }
 
-void Employee::removeEmployee(std::string column, std::string valueToSearch)
+void Employee::removeEmployee(std::string args)
 {
+
+    std::vector<ColumnRowIntersection> columnsAndValue;
+
+    fillArgs(columnsAndValue, args);
+
+    for ( int i = 0 ; i < columnsAndValue.size() ; i++)
+    {
+
+        if ( !m_employeeRecordset.columnExists(columnsAndValue.at(i).columnName) )
+        {
+            std::cout << "Column " << columnsAndValue.at(i).columnName << " doen't exist." << std::endl;
+            return;
+        }
+        else
+        {
+            if ( columnsAndValue.at(i).rowValue == "" )
+            {
+                std::cout << "Must specify a value to search by for " << columnsAndValue.at(i).columnName << std::endl;
+                return;
+            }
+        }
+
+    }
+
     m_employeeRecordset.moveFirst();
 
-    if ( !m_employeeRecordset.columnExists(column) )
-    {
-        return;
-    }
+    int counter = 0;
 
     while ( m_employeeRecordset.getRow() <= m_employeeRecordset.getRows() )
     {
-        if ( m_employeeRecordset.fields(column) == valueToSearch )
+        counter = 0;
+
+        for ( int i = 0 ; i < columnsAndValue.size() ; i++ )
+        {
+            if ( m_employeeRecordset.fields(columnsAndValue.at(i).columnName) == columnsAndValue.at(i).rowValue )
+            {
+                counter++;
+            }
+        }
+
+        if ( counter == columnsAndValue.size() )
         {
             m_employeeRecordset.removeRow();
+            m_employeeRecordset.write();
             return;
         }
+
         m_employeeRecordset.moveNext();
     }
 }
 
-void Employee::editEmployee(std::string column, std::string valueToSearch, std::string firstName, std::string lastName, std::string phone, std::string address, std::string wage)
+void Employee::editEmployee(std::string column)
 {
 
     if ( !m_employeeRecordset.columnExists(column) )
@@ -99,77 +119,27 @@ void Employee::viewEmployees(std::string args)
 {
 
 	system("cls");
-    std::vector<std::string> columnNames;
 
-    fillArgs(columnNames, args);
+    std::vector<ColumnRowIntersection> cRI;
 
-    if ( columnNames.size() == 0 )
+    fillArgs(cRI, args);
+
+    for ( int i = 0 ; i < cRI.size() ; i++)
     {
-        columnNames = m_employeeRecordset.getColumnHeaders();
-    }
-
-    for ( int i = 0 ; i < columnNames.size() ; i++ )
-    {
-        if ( !m_employeeRecordset.columnExists(columnNames.at(i)) )
+        if ( !m_employeeRecordset.columnExists(cRI.at(i).columnName) )
         {
-            std::cout << "Column " << columnNames.at(i) << " doesn't exist." << std::endl;
+            std::cout << "Column " << cRI.at(i).columnName << " doesn't exist." << std::endl;
             return;
         }
     }
 
-    std::cout << "\t|" << std::string ( m_employeeRecordset.getRowLength(columnNames) + columnNames.size() , '*') << "|" << std::endl;
-
-	std::cout << "\t|";
-
-    for ( int i = 0 ; i < columnNames.size() ; i++ )
-    {
-		if ( i != ( columnNames.size() - 1 ) )
-		{
-			std::cout << m_employeeRecordset.fields(columnNames.at(i)).getColumnName() << std::string( m_employeeRecordset.fields(columnNames.at(i)).getMaxLength() - m_employeeRecordset.fields(columnNames.at(i)).getColumnName().length(), ' ' ) << "|";
-		}
-		else
-		{
-			std::cout << m_employeeRecordset.fields(columnNames.at(i)).getColumnName() << std::string( m_employeeRecordset.fields(columnNames.at(i)).getMaxLength() - m_employeeRecordset.fields(columnNames.at(i)).getColumnName().length(), ' ' ) << " ";
-		}
-    }
-
-	std::cout << "|";
-
-    std::cout << std::endl << "\t|" << std::string ( m_employeeRecordset.getRowLength(columnNames) + columnNames.size() , '*') << "|" << std::endl;
-
-    m_employeeRecordset.moveFirst();
-
-    while ( m_employeeRecordset.getRow() <= m_employeeRecordset.getRows() )
-    {
-		std::cout << "\t|";
-        for ( int i = 0 ; i < columnNames.size() ; i++ )
-        {
-			if ( i != ( columnNames.size() - 1 ) )
-			{
-				std::cout << m_employeeRecordset.fields(columnNames.at(i)) << std::string( m_employeeRecordset.fields(columnNames.at(i)).getMaxLength() - m_employeeRecordset.fields(columnNames.at(i)).getRowText().length(), ' ' ) << "|";
-			}
-			else
-			{
-				std::cout << m_employeeRecordset.fields(columnNames.at(i)) << std::string( m_employeeRecordset.fields(columnNames.at(i)).getMaxLength() - m_employeeRecordset.fields(columnNames.at(i)).getRowText().length(), ' ' ) << " ";
-			}
-        }
-        std::cout << "|" << std::endl;
-		if ( m_employeeRecordset.getRow() != m_employeeRecordset.getRows() )
-		{
-			std::cout << "\t|" << std::string ( m_employeeRecordset.getRowLength(columnNames) + columnNames.size() , '-') << "|" << std::endl;
-		}
-
-        m_employeeRecordset.moveNext();
-    }
-
-	std::cout << "\t|" << std::string ( m_employeeRecordset.getRowLength(columnNames) + columnNames.size() , '*') << "|" << std::endl;
-
+    m_employeeRecordset.printRecordset(args);
 }
 
 bool Employee::employeeExists(std::string column, std::string value)
 {
 
-     m_employeeRecordset.moveFirst();
+    m_employeeRecordset.moveFirst();
 
     while ( m_employeeRecordset.getRow() <= m_employeeRecordset.getRows() )
     {
@@ -182,40 +152,50 @@ bool Employee::employeeExists(std::string column, std::string value)
     return false;
 }
 
-void Employee::fillArgs(std::vector<std::string> & vecArgs, std::string args)
+void fillArgs(std::vector<ColumnRowIntersection>& vecArgs, std::string args)
 {
+    int commaPosition = 0;
+    int colonPosition = 0;
+    ColumnRowIntersection cRI;
 
-    int position = 0;
+    args = trim(args);
 
-    if ( ( position = args.find(",")) == std::string::npos )
+    while ( ( commaPosition = args.find(",")) != std::string::npos )
     {
-        if ( trim(args).length() != 0 )
+        if ( ( colonPosition = args.find(":") ) == std::string::npos )
         {
-            vecArgs.push_back(trim(args));
-            args.erase(0, args.length());
+            cRI.columnName = trim(args.substr(0, commaPosition));
+            cRI.rowValue = "";
         }
-    }
-    else
-    {
-        while ( ( position = args.find(",")) != std::string::npos )
+        else
         {
-
-            vecArgs.push_back(trim(args.substr(0, position)));
-            args.erase(0, position + 1 );
+            cRI.columnName = trim(args.substr(0, colonPosition ));
+            cRI.rowValue = trim(args.substr(colonPosition+1, commaPosition - colonPosition - 1 ));
         }
+        vecArgs.push_back(cRI);
+        args.erase(0, commaPosition + 1 );
     }
 
     if ( args.length() > 0 )
     {
-        vecArgs.push_back(trim(args));
+        if ( ( colonPosition = args.find(":") ) == std::string::npos )
+        {
+            cRI.columnName = trim(args.substr(0, args.length()));
+            cRI.rowValue = "";
+        }
+        else
+        {
+            cRI.columnName = trim(args.substr(0, colonPosition ));
+            cRI.rowValue = trim(args.substr(colonPosition + 1, args.length()));
+        }
+        vecArgs.push_back(cRI);
     }
-
 }
+
 
 std::string trim(std::string stringToTrim)
 {
-
-	if ( stringToTrim.length() == 0 )
+    if ( stringToTrim.length() == 0 )
 	{
 		return "";
 	}
@@ -239,6 +219,5 @@ std::string trim(std::string stringToTrim)
     stringToTrim = stringToTrim.erase(position, stringToTrim.length());
 
     return stringToTrim;
-
 }
 

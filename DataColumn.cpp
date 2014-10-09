@@ -1,10 +1,10 @@
 #include "DataColumn.h"
-
+#include <math.h>
 
 DataColumn::DataColumn():
 	m_name(""), m_next(NULL), m_prev(NULL),
 	m_firstRow(NULL), m_lastRow(NULL), m_currentRow(NULL),
-	m_maxLength(0)
+	m_rowLength(0)
 {
 }
 
@@ -108,9 +108,9 @@ void DataColumn::operator=(const std::string rowText)
 {
 	m_currentRow->setText(rowText);
 
-	if ( rowText.length() > m_maxLength )
+	if ( rowText.length() > m_rowLength )
     {
-        m_maxLength = rowText.length();
+        m_rowLength = rowText.length();
     }
 }
 
@@ -259,24 +259,204 @@ bool DataColumn::operator!=(std::string value)
 
 void DataColumn::operator=(const int rhs)
 {
-    std::stringstream ss;
-    ss << rhs;
-    m_currentRow->setText(ss.str());
+    //std::stringstream ss;
+    //ss << rhs;
+    //m_currentRow->setText(ss.str());
+
+    int length = 0;
+    std::string invertedValue = "";
+    std::string value = "";
+
+    while ( ( rhs/(int)pow(10, length)) > 0)
+    {
+        length++;
+    }
+
+    length--;
+    int currentvalue = rhs;
+    int numberToCompare = 0;
+
+    while ( length >= 0)
+    {
+        numberToCompare = currentvalue%10;
+
+        switch ( numberToCompare )
+        {
+        case 0:
+            {
+                invertedValue += "0";
+                break;
+            }
+        case 1:
+            {
+                invertedValue += "1";
+                break;
+            }
+        case 2:
+            {
+                invertedValue += "2";
+                break;
+            }
+        case 3:
+            {
+                invertedValue += "3";
+                break;
+            }
+        case 4:
+            {
+                invertedValue += "4";
+                break;
+            }
+        case 5:
+            {
+                invertedValue += "5";
+                break;
+            }
+        case 6:
+            {
+                invertedValue += "6";
+                break;
+            }
+        case 7:
+            {
+                invertedValue += "7";
+                break;
+            }
+        case 8:
+            {
+                invertedValue += "8";
+                break;
+            }
+        case 9:
+            {
+                invertedValue += "9";
+                break;
+            }
+        }
+
+        currentvalue = currentvalue/10;
+        length--;
+    }
+
+    for ( int i = invertedValue.length() - 1 ; i >= 0 ; i-- )
+    {
+        value += invertedValue[i];
+    }
+
+    m_currentRow->setText(value);
+
 }
 
 void DataColumn::operator=(const double rhs)
 {
-    std::stringstream ss;
-    ss << rhs;
-    m_currentRow->setText(ss.str());
+
+    int length = 0;
+    std::string invertedValue = "";
+    std::string value = "";
+
+    while ( ( rhs/(int)pow(10, length)) > 0)
+    {
+        length++;
+    }
+
+    length--;
+    double currentvalue = rhs;
+    int numberToCompare = 0;
+
+    while ( length >= 0)
+    {
+        numberToCompare = fmod(currentvalue,10);
+
+        switch ( numberToCompare )
+        {
+        case 0:
+            {
+                invertedValue += "0";
+                break;
+            }
+        case 1:
+            {
+                invertedValue += "1";
+                break;
+            }
+        case 2:
+            {
+                invertedValue += "2";
+                break;
+            }
+        case 3:
+            {
+                invertedValue += "3";
+                break;
+            }
+        case 4:
+            {
+                invertedValue += "4";
+                break;
+            }
+        case 5:
+            {
+                invertedValue += "5";
+                break;
+            }
+        case 6:
+            {
+                invertedValue += "6";
+                break;
+            }
+        case 7:
+            {
+                invertedValue += "7";
+                break;
+            }
+        case 8:
+            {
+                invertedValue += "8";
+                break;
+            }
+        case 9:
+            {
+                invertedValue += "9";
+                break;
+            }
+        }
+
+        currentvalue = currentvalue/10;
+        length--;
+    }
+
+    for ( int i = invertedValue.length() - 1 ; i >= 0 ; i-- )
+    {
+        value += invertedValue[i];
+    }
+
+    m_currentRow->setText(value);
 }
 
-void DataColumn::setMaxLength(int length)
+void DataColumn::setColWidth(int length)
 {
-    m_maxLength = length;
+    m_rowLength = length;
 }
 
-int DataColumn::getMaxLength()
+int DataColumn::getColWidth()
 {
-    return m_maxLength;
+    return m_rowLength;
+}
+
+void DataColumn::recalculateRowLength()
+{
+
+    m_rowLength = m_name.length();
+
+    DataRow* currentRow = m_firstRow;
+
+    while ( currentRow != NULL )
+    {
+        if ( currentRow->getText().length() > m_rowLength )
+        {
+            m_rowLength = currentRow->getText().length();
+        }
+        currentRow = currentRow->getNext();
+    }
+
 }

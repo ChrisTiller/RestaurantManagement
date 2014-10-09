@@ -5,20 +5,6 @@
 #include <iostream>
 #include <vector>
 
-enum EmployeeInfoFlags
-{
-
-    EI_FNAME    = 0x01,
-    EI_LNAME    = 0x02,
-    EI_FULLNAME = 0x04,
-    EI_PHONE    = 0x08,
-    EI_ADDRESS  = 0x10,
-    EI_WAGE     = 0x20,
-    EI_ALL      = 0x40
-
-};
-
-
 class Employee
 {
 
@@ -28,8 +14,8 @@ public:
     ~Employee();
 
     void addEmployee(std::string);
-    void removeEmployee(std::string, std::string);
-    void editEmployee(std::string, std::string, std::string, std::string, std::string, std::string, std::string);
+    void removeEmployee(std::string);
+    void editEmployee(std::string);
     void viewEmployees(std::string);
 
     bool employeeExists(std::string, std::string);
@@ -49,9 +35,7 @@ private:
 
     std::string m_employeeSourceFile;
 
-    void fillArgs(std::vector<std::string>&, std::string);
 };
 
-std::string trim(std::string);
 
 #endif // EMPLOYEE_H_INCLUDED

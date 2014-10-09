@@ -1,7 +1,9 @@
 #include "Recordset.h"
 #include <iostream>
-
 #include <string>
+
+void fillArgs(std::vector<ColumnRowIntersection>&, std::string);
+std::string trim(std::string);
 
 Recordset::Recordset(std::string fileName, std::string delimiter):
 	m_numColumns(0), m_numRows(0), m_firstColumn(NULL),
@@ -13,7 +15,6 @@ Recordset::Recordset(std::string fileName, std::string delimiter):
 
 Recordset::~Recordset()
 {
-    writeToFile();
 	removeAll();
 }
 
@@ -29,7 +30,7 @@ void Recordset::addField(std::string columnName)
 	DataColumn* newColumn = new DataColumn;
 
 	newColumn->setColumnName(columnName);
-	newColumn->setMaxLength(columnName.length());
+	newColumn->setColWidth(columnName.length());
 
 	if ( m_firstColumn == NULL )
     {
@@ -67,10 +68,10 @@ DataColumn& Recordset::fields(std::string fieldName)
 		return temp;
 	}
 
-	if ( getRows() == 0 )
-    {
-        return temp;
-	}
+	//if ( getRows() == 0 )
+    //{
+    //    return temp;
+	//}
 
 	DataColumn* currentCol = m_firstColumn;
 
@@ -197,15 +198,7 @@ void Recordset::addRow()
 
 }
 
-void Recordset::update()
-{
-
-    //std::ofstream file( fileName.c_str(), std::ios::out | std::ios::ate | std::ios::app );
-
-
-}
-
-void Recordset::writeToFile()
+void Recordset::write()
 {
 
 	std::ofstream file( m_fileName.c_str(), std::ios::out | std::ios::trunc );
@@ -245,7 +238,7 @@ void Recordset::writeToFile()
 	}
 }
 
-void Recordset::loadFromFile()
+void Recordset::load()
 {
 
 	std::ifstream file(m_fileName.c_str(), std::ios::in);
@@ -407,9 +400,17 @@ void Recordset::removeRow()
 
         DataColumn* currentCol = m_firstColumn;
 
+        int rowLength = 0;
+
         while ( currentCol != NULL )
         {
+            rowLength = currentCol->getColWidth();
             currentCol->removeRow();
+
+            if ( rowLength == currentCol->getColWidth() )
+            {
+                currentCol->recalculateRowLength();
+            }
 
             currentCol = currentCol->getNext();
         }
@@ -496,10 +497,11 @@ void Recordset::moveTo(int row)
     }
 }
 
-std::vector<std::string> Recordset::getColumnHeaders()
+std::vector<ColumnRowIntersection> Recordset::getColumnHeaders()
 {
 
-    std::vector<std::string> cols;
+    std::vector<ColumnRowIntersection> cols;
+    ColumnRowIntersection cRI;
 
     if ( m_firstColumn == NULL )
     {
@@ -510,7 +512,9 @@ std::vector<std::string> Recordset::getColumnHeaders()
 
     while ( currenctCol != NULL )
     {
-        cols.push_back(currenctCol->getColumnName());
+        cRI.columnName = currenctCol->getColumnName();
+        cRI.rowValue = "";
+        cols.push_back(cRI);
         currenctCol = currenctCol->getNext();
     }
 
@@ -518,7 +522,7 @@ std::vector<std::string> Recordset::getColumnHeaders()
 
 }
 
-int Recordset::getRowLength(std::vector<std::string> columns)
+int Recordset::getRowLength(std::vector<ColumnRowIntersection> columns)
 {
 
     if ( m_firstColumn == NULL )
@@ -530,7 +534,96 @@ int Recordset::getRowLength(std::vector<std::string> columns)
 
     for ( int i = 0 ; i < columns.size() ; i++ )
 	{
-		length += fields(columns.at(i)).getMaxLength();
+		length += fields(columns.at(i).columnName).getColWidth();
 	}
     return length;
 }
+
+void Recordset::printRecordset(std::string args)
+{
+
+    std::vector<ColumnRowIntersection> cRI;
+
+    fillArgs(cRI, args);
+
+    if ( cRI.size() == 0 )
+    {
+        cRI = getColumnHeaders();
+    }
+
+    std::string message = "Recordset is empty";
+
+    int rowLength = getRowLength(cRI) + cRI.size();
+    int padding = 0;
+    int totalWidth = 0;
+
+    if ( message.length() >= rowLength )
+    {
+        rowLength += 2;
+    }
+
+    std::cout << "\t|" << std::string ( rowLength , '*') << "|" << std::endl;
+
+	std::cout << "\t|";
+
+    for ( int i = 0 ; i < cRI.size() ; i++ )
+    {
+        padding = (fields(cRI.at(i).columnName).getColWidth() - cRI.at(i).columnName.length())/2;
+        totalWidth = fields(cRI.at(i).columnName).getColWidth();
+
+        std::cout << std::string( padding, ' ' ) << cRI.at(i).columnName << std::string( totalWidth - (padding + cRI.at(i).columnName.length()), ' ' );
+
+		if ( i != ( cRI.size() - 1 ) )
+		{
+			 std::cout << "|";
+		}
+		else
+		{
+			std::cout << " ";
+		}
+    }
+
+	std::cout << "|";
+
+    std::cout << std::endl << "\t|" << std::string ( getRowLength(cRI) + cRI.size() , '*') << "|" << std::endl;
+
+    if ( getRows() != 0 )
+    {
+        moveFirst();
+
+        while ( getRow() <= getRows() )
+        {
+            std::cout << "\t|";
+            for ( int i = 0 ; i < cRI.size() ; i++ )
+            {
+                std::cout << fields(cRI.at(i).columnName) << std::string( fields(cRI.at(i).columnName).getColWidth() - fields(cRI.at(i).columnName).getRowText().length(), ' ' );
+                if ( i != ( cRI.size() - 1 ) )
+                {
+                    std::cout << "|";
+                }
+                else
+                {
+                    std::cout << " ";
+                }
+            }
+            std::cout << "|" << std::endl;
+            if ( getRow() != getRows() )
+            {
+                std::cout << "\t|" << std::string ( getRowLength(cRI) + cRI.size() , '-') << "|" << std::endl;
+            }
+
+            moveNext();
+        }
+    }
+    else
+    {
+        padding = ((getRowLength(cRI) + cRI.size() ) - message.length())/2;
+        totalWidth = getRowLength(cRI) + cRI.size();
+        std::cout << "\t|" << std::string ( padding, ' ') << message << std::string( totalWidth - (padding+ message.length()), ' ') << "|" << std::endl;
+    }
+
+	std::cout << "\t|" << std::string ( getRowLength(cRI) + cRI.size() , '*') << "|" << std::endl;
+
+}
+
+

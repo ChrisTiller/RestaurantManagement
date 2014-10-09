@@ -32,8 +32,10 @@ public:
 	void movePrev();
 	void moveLast();
 
-	void setMaxLength(int);
-	int getMaxLength();
+	void setColWidth(int);
+	int getColWidth();
+
+	void recalculateRowLength();
 
 	std::string getRowText() const;
 
@@ -58,7 +60,7 @@ private:
 	DataColumn* m_prev;
 
 	std::string m_name;
-    int m_maxLength;
+    int m_rowLength;
 };
 
 
