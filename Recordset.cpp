@@ -2,8 +2,7 @@
 #include <iostream>
 #include <string>
 
-void fillArgs(std::vector<ColumnRowIntersection>&, std::string);
-std::string trim(std::string);
+
 
 Recordset::Recordset(std::string fileName, std::string delimiter):
 	m_numColumns(0), m_numRows(0), m_firstColumn(NULL),
@@ -431,11 +430,6 @@ bool Recordset::isEmpty() const
     return result;
 }
 
-DataColumn* Recordset::getFirstColumn() const
-{
-    return m_firstColumn;
-}
-
 void Recordset::moveTo(int row)
 {
 
@@ -562,6 +556,7 @@ void Recordset::printRecordset(std::string args)
         rowLength += 2;
     }
 
+    // prints out the top border
     std::cout << "\t|" << std::string ( rowLength , '*') << "|" << std::endl;
 
 	std::cout << "\t|";
@@ -571,8 +566,11 @@ void Recordset::printRecordset(std::string args)
         padding = (fields(cRI.at(i).columnName).getColWidth() - cRI.at(i).columnName.length())/2;
         totalWidth = fields(cRI.at(i).columnName).getColWidth();
 
+        // Prints out the columns and centers them
         std::cout << std::string( padding, ' ' ) << cRI.at(i).columnName << std::string( totalWidth - (padding + cRI.at(i).columnName.length()), ' ' );
 
+
+        // depending on the column your on, it will print a " " signifying your at the end of the columns
 		if ( i != ( cRI.size() - 1 ) )
 		{
 			 std::cout << "|";
@@ -596,7 +594,9 @@ void Recordset::printRecordset(std::string args)
             std::cout << "\t|";
             for ( int i = 0 ; i < cRI.size() ; i++ )
             {
+                // Prints out the current row information
                 std::cout << fields(cRI.at(i).columnName) << std::string( fields(cRI.at(i).columnName).getColWidth() - fields(cRI.at(i).columnName).getRowText().length(), ' ' );
+                // Depending on the column your on, it will print a "|" or " ", with the " " signifying your at the end of the row
                 if ( i != ( cRI.size() - 1 ) )
                 {
                     std::cout << "|";
@@ -609,6 +609,7 @@ void Recordset::printRecordset(std::string args)
             std::cout << "|" << std::endl;
             if ( getRow() != getRows() )
             {
+                // Prints out the row separator
                 std::cout << "\t|" << std::string ( getRowLength(cRI) + cRI.size() , '-') << "|" << std::endl;
             }
 
@@ -617,8 +618,9 @@ void Recordset::printRecordset(std::string args)
     }
     else
     {
+        // Prints out a message saying the reordset is empty if the recordset is empty
         padding = ((getRowLength(cRI) + cRI.size() ) - message.length())/2;
-        totalWidth = getRowLength(cRI) + cRI.size();
+        totalWidth = getRowLength(cRI) + cRI.size()-1;
         std::cout << "\t|" << std::string ( padding, ' ') << message << std::string( totalWidth - (padding+ message.length()), ' ') << "|" << std::endl;
     }
 
@@ -626,4 +628,81 @@ void Recordset::printRecordset(std::string args)
 
 }
 
+// fills a vector that is passed in with a column name and row value with the given argument
+void fillArgs(std::vector<ColumnRowIntersection>& vecArgs, std::string args)
+{
+    int commaPosition = 0;
+    int colonPosition = 0;
+    ColumnRowIntersection cRI;
 
+    args = trim(args);
+
+    // Looks for a comma. This separates the different column names and row values
+    // Example: args = "First Name:Lonnie, Last Name:Bowe"
+    // This will split it into "First Name:Lonnie" and "Last Name:Bowe"
+    // Then it is split by the ":" to separate column names with their respective row values
+    // Example: "First Name:Lonnie" becomes
+    // column name = "First Name"
+    // row value = "Lonnie"
+    // It then pushes onto a vector a structure that contains variables to hold the values to retrieve them easier later on
+    while ( ( commaPosition = args.find(",")) != std::string::npos )
+    {
+        if ( ( colonPosition = args.find(":") ) == std::string::npos )
+        {
+            cRI.columnName = trim(args.substr(0, commaPosition));
+            cRI.rowValue = "";
+        }
+        else
+        {
+            cRI.columnName = trim(args.substr(0, colonPosition ));
+            cRI.rowValue = trim(args.substr(colonPosition+1, commaPosition - colonPosition - 1 ));
+        }
+        vecArgs.push_back(cRI);
+        args.erase(0, commaPosition + 1 );
+    }
+
+    // If there is just one column and row value given then this piece of code will execute to do the same exact thing
+    if ( args.length() > 0 )
+    {
+        if ( ( colonPosition = args.find(":") ) == std::string::npos )
+        {
+            cRI.columnName = trim(args.substr(0, args.length()));
+            cRI.rowValue = "";
+        }
+        else
+        {
+            cRI.columnName = trim(args.substr(0, colonPosition ));
+            cRI.rowValue = trim(args.substr(colonPosition + 1, args.length()));
+        }
+        vecArgs.push_back(cRI);
+    }
+}
+
+// Returns a trimmed string so that there are no beginning or ending spaces
+std::string trim(std::string stringToTrim)
+{
+    if ( stringToTrim.length() == 0 )
+	{
+		return "";
+	}
+
+    int position = 0;
+
+    while ( ( position < stringToTrim.length() ) && ( stringToTrim[position] == ' ' ) )
+    {
+        position++;
+    }
+
+    stringToTrim = stringToTrim.erase(0, position);
+
+    position = stringToTrim.length();
+
+    while ( ( position >= 0 ) && ( stringToTrim[position-1] == ' ' ) )
+    {
+        position--;
+    }
+
+    stringToTrim = stringToTrim.erase(position, stringToTrim.length());
+
+    return stringToTrim;
+}

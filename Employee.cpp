@@ -1,9 +1,6 @@
 #include "Employee.h"
 #include <cstdlib>
 
-void fillArgs(std::vector<ColumnRowIntersection>&, std::string);
-std::string trim(std::string);
-
 Employee::Employee():
     m_employeeRecordset("C:\\Users\\Chris\\Documents\\GitHub\\RestaurantManagement\\Employees.txt", ";")
 {
@@ -152,72 +149,5 @@ bool Employee::employeeExists(std::string column, std::string value)
     return false;
 }
 
-void fillArgs(std::vector<ColumnRowIntersection>& vecArgs, std::string args)
-{
-    int commaPosition = 0;
-    int colonPosition = 0;
-    ColumnRowIntersection cRI;
 
-    args = trim(args);
-
-    while ( ( commaPosition = args.find(",")) != std::string::npos )
-    {
-        if ( ( colonPosition = args.find(":") ) == std::string::npos )
-        {
-            cRI.columnName = trim(args.substr(0, commaPosition));
-            cRI.rowValue = "";
-        }
-        else
-        {
-            cRI.columnName = trim(args.substr(0, colonPosition ));
-            cRI.rowValue = trim(args.substr(colonPosition+1, commaPosition - colonPosition - 1 ));
-        }
-        vecArgs.push_back(cRI);
-        args.erase(0, commaPosition + 1 );
-    }
-
-    if ( args.length() > 0 )
-    {
-        if ( ( colonPosition = args.find(":") ) == std::string::npos )
-        {
-            cRI.columnName = trim(args.substr(0, args.length()));
-            cRI.rowValue = "";
-        }
-        else
-        {
-            cRI.columnName = trim(args.substr(0, colonPosition ));
-            cRI.rowValue = trim(args.substr(colonPosition + 1, args.length()));
-        }
-        vecArgs.push_back(cRI);
-    }
-}
-
-
-std::string trim(std::string stringToTrim)
-{
-    if ( stringToTrim.length() == 0 )
-	{
-		return "";
-	}
-
-    int position = 0;
-
-    while ( ( position < stringToTrim.length() ) && ( stringToTrim[position] == ' ' ) )
-    {
-        position++;
-    }
-
-    stringToTrim = stringToTrim.erase(0, position);
-
-    position = stringToTrim.length();
-
-    while ( ( position >= 0 ) && ( stringToTrim[position-1] == ' ' ) )
-    {
-        position--;
-    }
-
-    stringToTrim = stringToTrim.erase(position, stringToTrim.length());
-
-    return stringToTrim;
-}
 

@@ -11,9 +11,12 @@
 
 struct ColumnRowIntersection
 {
-    std::string columnName;
-    std::string rowValue;
+    std::string columnName;     // Holds a specific column name
+    std::string rowValue;       // Holds a specific row value for the specified columns
 };
+
+void fillArgs(std::vector<ColumnRowIntersection>&, std::string);
+std::string trim(std::string);
 
 class Recordset
 {
@@ -22,51 +25,53 @@ public:
 	Recordset(std::string="", std::string="");
 	~Recordset();
 
-	void addField(std::string);
-	DataColumn& fields(std::string);
-	DataColumn* getFirstColumn() const;
+	void addField(std::string);     // Adds a column to the Recordset
+	DataColumn& fields(std::string);// Sets the currentColumn pointer to the column whose name is given in the argument
 
+    // Controls the current row you are looking at in the Recordset
 	void moveFirst();
 	void moveNext();
 	void movePrev();
 	void moveLast();
 	void moveTo(int);
 
-	int getRows() const;
-	int getRow() const;
-	int getColumns() const;
-    int getRowLength(std::vector<ColumnRowIntersection>);
+	int getRows() const;    // Gets the number of rows contained within the Recordset
+	int getRow() const;     // Gets the number of the current row you are in within the Recordset
+	int getColumns() const; // Gets the number of columns contained within the Recordset
+    int getRowLength(std::vector<ColumnRowIntersection>); // Gets the length of the row that would be seen based on the columns given in the argument
 
+    // Controls row addition and deletion within the Recordset
 	void addRow();
 	void removeRow();
 	void removeAll();
-	void update();
 
-	bool isEmpty() const;
+	bool isEmpty() const; // determines if the Reocrdset doesn't have any rows
 
-	bool columnExists(std::string);
+	bool columnExists(std::string); // Determines if the column specified exists within the Recordset
 
 	Recordset filter(std::string, std::string);
 
+    // Reads and writes to a specified file
 	void write();
 	void load();
 
+    // Prints out the Recordset in a grid like form based on the columns that are given to it in the arguments
 	void printRecordset(std::string);
 
-    std::vector<ColumnRowIntersection> getColumnHeaders();
+    std::vector<ColumnRowIntersection> getColumnHeaders(); // Gets all the column names contained within the Recordset and puts it in a vector
 
 private:
-	DataColumn* m_firstColumn;
-	DataColumn* m_currentColumn;
-	DataColumn* m_lastColumn;
+	DataColumn* m_firstColumn;      // pointer to the first column in the Recordset
+	DataColumn* m_currentColumn;    // pointer to the current column in the Recordset
+	DataColumn* m_lastColumn;       // pointer to the last column in the Recordset
 
-	int m_numRows;
-	int m_numColumns;
-	int m_currentRow;
+	int m_numRows;                  // holds the number of rows in the Recordset
+	int m_numColumns;               // holds the number of columns in the Reocrdset
+	int m_currentRow;               // holds the number of the current row you are in within the Recordset
 
-    bool hiAutoNumber = true;
-	std::string m_fileName;
-	std::string m_delimiter;
+	std::string m_fileName;         // Holds the filename that the Recordset will read from and write to
+	std::string m_delimiter;        // Holds the character that will be used to separate all the information within the output text file
+                                    //       as well as what the Recordset looks for in the input file to correctly store the information
 
 };
 

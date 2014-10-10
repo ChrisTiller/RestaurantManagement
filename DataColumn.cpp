@@ -49,34 +49,37 @@ void DataColumn::moveFirst()
 
 void DataColumn::moveNext()
 {
-
+    // Moves the currentRow pointer to the next DataRow in the DataColumn
+    // provided the row isn't already the last row
 	if ( m_currentRow != m_lastRow )
     {
 		m_currentRow = m_currentRow->getNext();
 	}
-
 }
 
 void DataColumn::movePrev()
 {
-
+    // Moves the currentRow pointer to the previous DataRow in the DataColumn
+    // provided the row isn't already the first row
 	if ( m_currentRow != m_firstRow )
     {
 		m_currentRow = m_currentRow->getPrev();
 	}
-
 }
 
 void DataColumn::moveLast()
 {
+    // Moves the currentRow pointer to the last DataRow in the DataColumn
 	m_currentRow = m_lastRow;
 }
 
 void DataColumn::addRow()
 {
-
+    // Creates a pointer to a new DataRow and adds it to the end of the DataColumn
 	DataRow* newRow = new DataRow;
 
+    // If firstRow is NULL, list is empty so we need to make the firstRow
+    // Else append the new DataRow to the end of the DataColumn
 	if ( m_firstRow == NULL )
     {
 		newRow->setNext(NULL);
@@ -95,6 +98,7 @@ void DataColumn::addRow()
 		m_lastRow = newRow;
 	}
 
+    // Sets the currentRow pointer to the newly created DataRow for editing purposes later on
 	m_currentRow = m_lastRow;
 
 }
@@ -106,6 +110,9 @@ std::string DataColumn::getRowText() const
 
 void DataColumn::operator=(const std::string rowText)
 {
+    // Sets the currentRow's text value and checks if it's length
+    // is greater than the last known greatest length in the DataColumn
+    // for later alignment
 	m_currentRow->setText(rowText);
 
 	if ( rowText.length() > m_rowLength )
@@ -123,8 +130,7 @@ DataColumn& DataColumn::operator=(const DataColumn& dt)
 
 void DataColumn::removeAll()
 {
-
-
+    // Removes all the rows within the DataColumn
 	if ( m_firstRow == NULL )
     {
 		return;
@@ -163,7 +169,8 @@ std::ostream& operator << (std::ostream& osObject, const DataColumn& dt)
 
 void DataColumn::removeRow()
 {
-
+    // Removes the current DataRow from the DataColumn and the
+    // currentRow pointer will be set to the DataRow after the DataRow you are deleting
     if ( m_firstRow == NULL )
     {
         return;
@@ -171,6 +178,7 @@ void DataColumn::removeRow()
 
     DataRow* row;
 
+    // deals with the case if you only have one row in your DataColumn list
     if ( m_firstRow == m_lastRow )
     {
 
@@ -189,6 +197,7 @@ void DataColumn::removeRow()
 
     }
 
+    // deals with if the row up for deletion is the first row or the last row in the DataColumn list
     if ( m_currentRow == m_firstRow )
     {
         row = m_firstRow;
@@ -225,6 +234,7 @@ void DataColumn::removeRow()
         return;
     }
 
+    // deals with a random DataRow in the DataColumn up for deletion
     row = m_currentRow;
 
     m_currentRow->getPrev()->setNext(m_currentRow->getNext());
@@ -259,15 +269,18 @@ bool DataColumn::operator!=(std::string value)
 
 void DataColumn::operator=(const int rhs)
 {
-    //std::stringstream ss;
-    //ss << rhs;
-    //m_currentRow->setText(ss.str());
+    // converts a given integer into a string and stores it in the current DataRow in the DataColumn
 
     int length = 0;
     std::string invertedValue = "";
     std::string value = "";
 
-    while ( ( rhs/(int)pow(10, length)) > 0)
+    if ( rhs == 0 )
+    {
+        m_currentRow->setText("0");
+    }
+
+    while ( ( rhs / (int)pow(10, length) ) > 0 )
     {
         length++;
     }
@@ -338,6 +351,8 @@ void DataColumn::operator=(const int rhs)
         length--;
     }
 
+    // string value of the integer is reversed so we need to get the
+    // original value back
     for ( int i = invertedValue.length() - 1 ; i >= 0 ; i-- )
     {
         value += invertedValue[i];
@@ -349,7 +364,6 @@ void DataColumn::operator=(const int rhs)
 
 void DataColumn::operator=(const double rhs)
 {
-
     int length = 0;
     std::string invertedValue = "";
     std::string value = "";
@@ -445,7 +459,8 @@ int DataColumn::getColWidth()
 
 void DataColumn::recalculateRowLength()
 {
-
+    // Goes through the DataRow list in the DataColumn to determine
+    // what the longest string in the DataColumn is
     m_rowLength = m_name.length();
 
     DataRow* currentRow = m_firstRow;
