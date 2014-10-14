@@ -610,7 +610,7 @@ void Recordset::printRecordset(std::string args)
             if ( getRow() != getRows() )
             {
                 // Prints out the row separator
-                std::cout << "\t|" << std::string ( getRowLength(cRI) + cRI.size() , '-') << "|" << std::endl;
+                //std::cout << "\t|" << std::string ( getRowLength(cRI) + cRI.size() , '-') << "|" << std::endl;
             }
 
             moveNext();

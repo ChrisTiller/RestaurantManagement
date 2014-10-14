@@ -1,4 +1,5 @@
 ID;First Name;Last Name;Phone Number;Address;Wage;Position;Removed;
-1;Chris;Tiler;;;;;
-2;Dhiraj;;;;;;
-;Muath;Aldhubayb;;;7.25;Manager;
+1;Chris;Tiler;;;;;;
+2;Dhiraj;;;;;;;
+;Muath;Aldhubayb;;;7.25;Manager;;
+4;Lonnie;;;;;;;

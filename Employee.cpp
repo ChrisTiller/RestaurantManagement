@@ -2,7 +2,7 @@
 #include <cstdlib>
 
 Employee::Employee():
-    m_employeeRecordset("C:\\Users\\Chris\\Documents\\GitHub\\RestaurantManagement\\Employees.txt", ";")
+    m_employeeRecordset("C:\\Users\\Chris\\Documents\\GitHub\\RestaurantManagement\\inventory.txt", ";")
 {
     m_employeeRecordset.load();
 }
