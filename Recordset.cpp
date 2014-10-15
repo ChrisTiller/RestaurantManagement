@@ -17,12 +17,6 @@ Recordset::~Recordset()
 	removeAll();
 }
 
-
-/*
-    parameters:
-    description:
-*/
-
 void Recordset::addField(std::string columnName)
 {
 
@@ -239,6 +233,11 @@ void Recordset::write()
 
 void Recordset::load()
 {
+
+    if ( m_firstColumn != NULL )
+    {
+        removeAll();
+    }
 
 	std::ifstream file(m_fileName.c_str(), std::ios::in);
 
@@ -536,6 +535,11 @@ int Recordset::getRowLength(std::vector<ColumnRowIntersection> columns)
 void Recordset::printRecordset(std::string args)
 {
 
+    if ( m_fileName != "" )
+    {
+        load();
+    }
+
     std::vector<ColumnRowIntersection> cRI;
 
     fillArgs(cRI, args);
@@ -551,15 +555,13 @@ void Recordset::printRecordset(std::string args)
     int padding = 0;
     int totalWidth = 0;
 
-    if ( message.length() >= rowLength )
-    {
-        rowLength += 2;
-    }
+    //if ( message.length() >= rowLength )
+    //{
+       // rowLength += 2;
+    //}
 
     // prints out the top border
-    std::cout << "\t|" << std::string ( rowLength , '*') << "|" << std::endl;
-
-	std::cout << "\t|";
+    std::cout << std::string ( rowLength , '*') << std::endl;
 
     for ( int i = 0 ; i < cRI.size() ; i++ )
     {
@@ -581,9 +583,8 @@ void Recordset::printRecordset(std::string args)
 		}
     }
 
-	std::cout << "|";
 
-    std::cout << std::endl << "\t|" << std::string ( getRowLength(cRI) + cRI.size() , '*') << "|" << std::endl;
+    std::cout << std::endl << std::string ( getRowLength(cRI) + cRI.size() , '*') << std::endl;
 
     if ( getRows() != 0 )
     {
@@ -591,7 +592,7 @@ void Recordset::printRecordset(std::string args)
 
         while ( getRow() <= getRows() )
         {
-            std::cout << "\t|";
+
             for ( int i = 0 ; i < cRI.size() ; i++ )
             {
                 // Prints out the current row information
@@ -606,11 +607,11 @@ void Recordset::printRecordset(std::string args)
                     std::cout << " ";
                 }
             }
-            std::cout << "|" << std::endl;
+            std::cout << std::endl;
             if ( getRow() != getRows() )
             {
                 // Prints out the row separator
-                std::cout << "\t|" << std::string ( getRowLength(cRI) + cRI.size() , '-') << "|" << std::endl;
+                //std::cout  << std::string ( getRowLength(cRI) + cRI.size() , '-') << std::endl;
             }
 
             moveNext();
@@ -621,10 +622,10 @@ void Recordset::printRecordset(std::string args)
         // Prints out a message saying the reordset is empty if the recordset is empty
         padding = ((getRowLength(cRI) + cRI.size() ) - message.length())/2;
         totalWidth = getRowLength(cRI) + cRI.size()-1;
-        std::cout << "\t|" << std::string ( padding, ' ') << message << std::string( totalWidth - (padding+ message.length()), ' ') << "|" << std::endl;
+        std::cout << std::string ( padding, ' ') << message << std::string( totalWidth - (padding+ message.length()), ' ')  << std::endl;
     }
 
-	std::cout << "\t|" << std::string ( getRowLength(cRI) + cRI.size() , '*') << "|" << std::endl;
+	std::cout  << std::string ( getRowLength(cRI) + cRI.size() , '*')  << std::endl;
 
 }
 

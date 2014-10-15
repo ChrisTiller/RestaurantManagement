@@ -32,6 +32,8 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
+		<Unit filename="Calendar.cpp" />
+		<Unit filename="Calendar.h" />
 		<Unit filename="DataColumn.cpp" />
 		<Unit filename="DataColumn.h" />
 		<Unit filename="DataRow.cpp" />

@@ -20,15 +20,6 @@ public:
 
     bool employeeExists(std::string, std::string);
 
-    std::string getEmployeeName(std::string, std::string);
-    std::string getEmployeePhone(std::string, std::string);
-    std::string getEmployeeAddress(std::string, std::string);
-    std::string getEmployeeWageStr(std::string, std::string);
-
-    std::string getEmployeeInfo(int);
-
-    int getEmployeeWageInt(std::string, std::string);
-
 private:
 
     Recordset m_employeeRecordset;
