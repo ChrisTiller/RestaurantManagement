@@ -3,6 +3,7 @@
 
 #include "DataColumn.h"
 #include "DataRow.h"
+#include "helperFile.h"
 #include <string>
 #include <fstream>
 #include <iostream>
@@ -16,7 +17,7 @@ struct ColumnRowIntersection
 };
 
 void fillArgs(std::vector<ColumnRowIntersection>&, std::string);
-std::string trim(std::string);
+
 
 class Recordset
 {
@@ -40,8 +41,11 @@ public:
 	int getColumns() const; // Gets the number of columns contained within the Recordset
     int getRowLength(std::vector<ColumnRowIntersection>); // Gets the length of the row that would be seen based on the columns given in the argument
 
+    bool containsRow(std::vector<ColumnRowIntersection> cRI); // Determines where the row is that has the specified values, if one exists
+    bool containsRow(std::string, std::string); // Determines where the row is that has the specified values, if one exists
+
     // Controls row addition and deletion within the Recordset
-	void addRow();
+	void addRow(bool=false);
 	void removeRow();
 	void removeAll();
 
@@ -60,6 +64,9 @@ public:
 
     std::vector<ColumnRowIntersection> getColumnHeaders(); // Gets all the column names contained within the Recordset and puts it in a vector
 
+    bool isAutoIncrement();
+    void setAutoIncrement(bool);
+
 private:
 	DataColumn* m_firstColumn;      // pointer to the first column in the Recordset
 	DataColumn* m_currentColumn;    // pointer to the current column in the Recordset
@@ -72,7 +79,7 @@ private:
 	std::string m_fileName;         // Holds the filename that the Recordset will read from and write to
 	std::string m_delimiter;        // Holds the character that will be used to separate all the information within the output text file
                                     //       as well as what the Recordset looks for in the input file to correctly store the information
-
+    bool m_autoIncrement;
 };
 
 #endif

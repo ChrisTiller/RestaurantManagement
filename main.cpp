@@ -2,21 +2,18 @@
 #include "Recordset.h"
 #include "Employee.h"
 #include "Calendar.h"
+#include "Scheduling.h"
+#include "helperFile.h"
+#include "Payroll.h"
 #include <cassert>
 #include <math.h>
 #include <cstdlib>
 
 using namespace std;
 
-struct Command
-{
-    string mainCommand;
-    string commandArguments;
-};
-
-void parseCommand(Command&, string);
 void Employees();
 void Scheduling();
+void Payrolls();
 
 int main()
 {
@@ -32,8 +29,9 @@ int main()
         cout << "Program Options" << endl;
         cout << "Employees" << endl;
         cout << "Scheduling" << endl;
+        cout << "Payroll" << endl;
 
-        cout << "Type the name of the option you want to go to: ";
+        cout << "Select the name of the option you want to go to: ";
         getline(cin, rawInput);
 
         Command userCommand;
@@ -48,29 +46,102 @@ int main()
         {
             Scheduling();
         }
+        else if ( userCommand.mainCommand == "Payroll" )
+        {
+            Payrolls();
+        }
         else if ( userCommand.mainCommand == "exit" )
         {
             done = true;
         }
-
-
     }
-
 
     return 0;
 }
 
+void Payrolls()
+{
+    Payroll payroll;
+
+    string mainCommand = "";
+    string rawInput = "";
+    string prompt = "Command>";
+
+    bool done = false;
+
+    system("cls");
+
+    while ( !done )
+    {
+        cout << prompt;
+
+        getline(cin, rawInput);
+
+        system("cls");
+
+        Command userCommand;
+
+        parseCommand(userCommand, rawInput);
+
+        if ( userCommand.mainCommand == "payroll" )
+        {
+            payroll.completePayroll(userCommand.commandArguments);
+        }
+        else if ( userCommand.mainCommand == "help" )
+        {
+            cout << "payroll <date from>-<date through>" << endl;
+        }
+        else if ( userCommand.mainCommand == "exit")
+        {
+            done = true;
+        }
+
+    }
+
+    return;
+}
+
 void Scheduling()
 {
-    string rawInput;
+    Schedules Schedule;
 
-    getline(cin, rawInput);
+    string mainCommand = "";
+    string rawInput = "";
+    string prompt = "Command>";
 
-    Calendar cal;
+    bool done = false;
 
-    cal.printCalendar(rawInput);
+    system("cls");
 
-    getchar();
+    while ( !done )
+    {
+        cout << prompt;
+
+        getline(cin, rawInput);
+
+        system("cls");
+
+        Command userCommand;
+
+        parseCommand(userCommand, rawInput);
+
+        if ( userCommand.mainCommand == "calendar" )
+        {
+            Schedule.viewCalendar(userCommand.commandArguments);
+            done = true;
+        }
+        else if ( userCommand.mainCommand == "help" )
+        {
+            cout << "calendar <mm/yyyy>" << endl;
+        }
+        else if ( userCommand.mainCommand == "exit")
+        {
+            done = true;
+        }
+
+    }
+
+    return;
 }
 
 void Employees()
@@ -131,31 +202,10 @@ void Employees()
         else
         {
             cout << "Unknown command: " << userCommand.mainCommand << endl;
-            cout << "Enter help for a list of commands." << endl;
+            cout << "Enter help for a list of commands" << endl;
         }
 
     }
 
     return;
 }
-
-void parseCommand(Command& com, string rawInput)
-{
-
-    rawInput = trim(rawInput);
-
-    int position = 0;
-
-    if ( ( position = rawInput.find(" ")) == std::string::npos )
-    {
-        com.mainCommand = rawInput;
-    }
-    else
-    {
-        com.mainCommand = trim(rawInput.substr(0, position));
-        rawInput.erase(0, position + 1 );
-        com.commandArguments = trim(rawInput.substr(0, rawInput.length()));
-    }
-
-}
-

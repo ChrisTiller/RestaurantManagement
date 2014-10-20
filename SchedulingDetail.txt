@@ -1,0 +1,17 @@
+ID;Date;EmployeeID;First Name;Last Name;Time;
+1;08102014;1;Chris;Tiller;8;
+2;08102014;2;Dylan;;9;
+3;08102014;2;Dylan;;10;
+4;08102014;2;Dylan;;11;
+5;08102014;1;Chris;Tiller;7;
+6;08102014;1;Chris;Tiller;12;
+7;08102014;1;Chris;Tiller;13;
+8;09102014;1;Chris;Tiller;8;
+9;09102014;1;Chris;Tiller;9;
+10;09102014;1;Chris;Tiller;10;
+11;09102014;1;Chris;Tiller;11;
+12;09102014;1;Chris;Tiller;12;
+13;09102014;2;Dylan;;13;
+14;09102014;2;Dylan;;14;
+15;09102014;2;Dylan;;15;
+16;09102014;2;Dylan;;16;

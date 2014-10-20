@@ -1,5 +1,6 @@
 #include "Calendar.h"
 #include "Recordset.h"
+#include "helperFile.h"
 #include <iostream>
 #include <iomanip>
 #include <cstdlib>
@@ -19,9 +20,43 @@ void Calendar::printCalendar(std::string args)
 
     std::string daysOfWeek = " Sun Mon Tue Wed Thu Fri Sat";
 
-    std::cout << std::string (daysOfWeek.length()/2, ' ' ) << monthName[date.month-1] << std::endl;
+    std::cout << std::string (daysOfWeek.length()/2 - monthName[date.month-10].length()/2, ' ' ) << monthName[date.month-1] << std::endl;
     std::cout << daysOfWeek << std::endl;
     std::cout << " --- --- --- --- --- --- ---" << std::endl << " ";
+
+    for( int day = 0 ; day < startingDayOfMonth ; day++ )
+    {
+        std::cout << "    ";
+    }
+    for(int day=1; day<=days; day++)
+    {
+        std::cout << std::setw(3) << day << " ";
+
+        if (++startingDayOfMonth>6)
+        {
+            startingDayOfMonth = 0; std::cout << std::endl << " ";
+        }
+   }
+
+   std::cout << std::endl;
+
+}
+
+void Calendar::printCalendar(int month, int year)
+{
+
+    std::string monthName[] = {"January","February","March","April","May","June","July",
+                                "August","September","October","November","December"};
+
+    int days = getDaysInMonth(month, year );
+    int startingDayOfMonth = getStartingDayOfMonth(month, year);
+
+    std::string daysOfWeek = " Sun Mon Tue Wed Thu Fri Sat";
+
+    std::cout << std::string (daysOfWeek.length()/2 - monthName[month-10].length()/2, ' ' ) << monthName[month-1] << std::endl;
+    std::cout << daysOfWeek << std::endl;
+    std::cout << " --- --- --- --- --- --- ---" << std::endl << " ";
+
     for( int day = 0 ; day < startingDayOfMonth ; day++ )
     {
         std::cout << "    ";
@@ -102,7 +137,7 @@ Date Calendar::parseDateFromString(std::string dateString)
         dateString.erase(0, position+1);
         date.year = stringToInt((trim(dateString.substr(0, dateString.length()))));
     }
-
+    return date;
 }
 
 int Calendar::stringToInt(std::string stringValue)
@@ -173,4 +208,115 @@ int Calendar::stringToInt(std::string stringValue)
     }
 
     return value;
+}
+
+std::string Calendar::intToString(int intValue)
+{
+    // converts a given integer into a string
+    int length = 0;
+    std::string invertedValue = "";
+    std::string value = "";
+
+    if ( intValue == 0 )
+    {
+       return "0";
+    }
+
+    while ( ( intValue / (int)pow(10, length) ) > 0 )
+    {
+        length++;
+    }
+
+    length--;
+    int currentvalue = intValue;
+    int numberToCompare = 0;
+
+    while ( length >= 0)
+    {
+        numberToCompare = currentvalue%10;
+
+        switch ( numberToCompare )
+        {
+        case 0:
+            {
+                invertedValue += "0";
+                break;
+            }
+        case 1:
+            {
+                invertedValue += "1";
+                break;
+            }
+        case 2:
+            {
+                invertedValue += "2";
+                break;
+            }
+        case 3:
+            {
+                invertedValue += "3";
+                break;
+            }
+        case 4:
+            {
+                invertedValue += "4";
+                break;
+            }
+        case 5:
+            {
+                invertedValue += "5";
+                break;
+            }
+        case 6:
+            {
+                invertedValue += "6";
+                break;
+            }
+        case 7:
+            {
+                invertedValue += "7";
+                break;
+            }
+        case 8:
+            {
+                invertedValue += "8";
+                break;
+            }
+        case 9:
+            {
+                invertedValue += "9";
+                break;
+            }
+        }
+
+        currentvalue = currentvalue/10;
+        length--;
+    }
+
+    // string value of the integer is reversed so we need to get the
+    // original value back
+    for ( int i = invertedValue.length() - 1 ; i >= 0 ; i-- )
+    {
+        value += invertedValue[i];
+    }
+
+    return value;
+
+}
+
+bool Calendar::dateIsValid(Date dateToCheck)
+{
+
+    if ( ( dateToCheck.month > 0 ) && ( dateToCheck.month < 13 ) )
+    {
+        if ( ( dateToCheck.day > 0 ) && ( dateToCheck.day < getDaysInMonth(dateToCheck.month, dateToCheck.year ) ) )
+        {
+            if ( dateToCheck.year > 0 )
+            {
+                return true;
+            }
+        }
+    }
+
+    return false;
 }

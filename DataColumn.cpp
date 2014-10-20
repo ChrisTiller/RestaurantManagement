@@ -1,5 +1,6 @@
 #include "DataColumn.h"
 #include <math.h>
+#include "helperFile.h"
 
 DataColumn::DataColumn():
 	m_name(""), m_next(NULL), m_prev(NULL),
@@ -358,7 +359,7 @@ void DataColumn::operator=(const int rhs)
         value += invertedValue[i];
     }
 
-    m_currentRow->setText(value);
+        m_currentRow->setText(value);
 
 }
 
@@ -368,81 +369,94 @@ void DataColumn::operator=(const double rhs)
     std::string invertedValue = "";
     std::string value = "";
 
-    while ( ( rhs/(int)pow(10, length)) > 0)
-    {
-        length++;
-    }
+    int wholeValue = rhs;
+    int decimal = (rhs-wholeValue)*100;
 
-    length--;
-    double currentvalue = rhs;
-    int numberToCompare = 0;
+    string wholeValueString = intToString(wholeValue);
+    string decimalString = intToString(decimal);
 
-    while ( length >= 0)
-    {
-        numberToCompare = fmod(currentvalue,10);
+    value = wholeValueString + "." + decimalString;
 
-        switch ( numberToCompare )
-        {
-        case 0:
-            {
-                invertedValue += "0";
-                break;
-            }
-        case 1:
-            {
-                invertedValue += "1";
-                break;
-            }
-        case 2:
-            {
-                invertedValue += "2";
-                break;
-            }
-        case 3:
-            {
-                invertedValue += "3";
-                break;
-            }
-        case 4:
-            {
-                invertedValue += "4";
-                break;
-            }
-        case 5:
-            {
-                invertedValue += "5";
-                break;
-            }
-        case 6:
-            {
-                invertedValue += "6";
-                break;
-            }
-        case 7:
-            {
-                invertedValue += "7";
-                break;
-            }
-        case 8:
-            {
-                invertedValue += "8";
-                break;
-            }
-        case 9:
-            {
-                invertedValue += "9";
-                break;
-            }
-        }
-
-        currentvalue = currentvalue/10;
-        length--;
-    }
-
-    for ( int i = invertedValue.length() - 1 ; i >= 0 ; i-- )
-    {
-        value += invertedValue[i];
-    }
+//    while ( ( wholeValue/(int)pow(10, length)) > 0)
+//    {
+//        length++;
+//    }
+//
+//    length--;
+//    double currentvalue = wholeValue;
+//    int numberToCompare = 0;
+//
+//    while ( length >= 0)
+//    {
+//        numberToCompare = fmod(currentvalue,10);
+//
+//        switch ( numberToCompare )
+//        {
+//        case 0:
+//            {
+//                invertedValue += "0";
+//                break;
+//            }
+//        case 1:
+//            {
+//                invertedValue += "1";
+//                break;
+//            }
+//        case 2:
+//            {
+//                invertedValue += "2";
+//                break;
+//            }
+//        case 3:
+//            {
+//                invertedValue += "3";
+//                break;
+//            }
+//        case 4:
+//            {
+//                invertedValue += "4";
+//                break;
+//            }
+//        case 5:
+//            {
+//                invertedValue += "5";
+//                break;
+//            }
+//        case 6:
+//            {
+//                invertedValue += "6";
+//                break;
+//            }
+//        case 7:
+//            {
+//                invertedValue += "7";
+//                break;
+//            }
+//        case 8:
+//            {
+//                invertedValue += "8";
+//                break;
+//            }
+//        case 9:
+//            {
+//                invertedValue += "9";
+//                break;
+//            }
+//        }
+//
+//        currentvalue = currentvalue/10;
+//        length--;
+//    }
+//
+//    for ( int i = invertedValue.length() - 1 ; i >= 0 ; i-- )
+//    {
+//        value += invertedValue[i];
+//    }
+//
+//    while ( value[0] == '0')
+//    {
+//        value = value.substr(1, value.length());
+//    }
 
     m_currentRow->setText(value);
 }
@@ -474,4 +488,103 @@ void DataColumn::recalculateRowLength()
         currentRow = currentRow->getNext();
     }
 
+}
+
+int DataColumn::toInt()
+{
+    int value = 0;
+
+    std::string stringValue = getRowText();
+
+    for ( int i = 0 ; i < stringValue.length() ; i++ )
+    {
+
+        switch ( stringValue[i] )
+        {
+            case '0':
+            {
+                value = (value*10) + 0;
+                break;
+            }
+            case '1':
+            {
+                value = (value*10) + 1;
+                break;
+            }
+            case '2':
+            {
+                value = (value*10) + 2;
+                break;
+            }
+            case '3':
+            {
+                value = (value*10) + 3;
+                break;
+            }
+            case '4':
+            {
+                value = (value*10) + 4;
+                break;
+            }
+            case '5':
+            {
+                value = (value*10) + 5;
+                break;
+            }
+            case '6':
+            {
+                value = (value*10) + 6;
+                break;
+            }
+            case '7':
+            {
+                value = (value*10) + 7;
+                break;
+            }
+            case '8':
+            {
+                value = (value*10) + 8;
+                break;
+            }
+            case '9':
+            {
+                value = (value*10) + 9;
+                break;
+            }
+            default:
+                {
+                    return value;
+                }
+        }
+
+    }
+
+    return value;
+}
+
+double DataColumn::toDouble()
+{
+
+    std::string stringValue = m_currentRow->getText();
+    int position = 0;
+
+    int wholeValue = 0;
+    int decimal =  0;
+
+    double value;
+
+    if ( ( position = stringValue.find(".") ) != std::string::npos )
+    {
+        wholeValue = stringToInt( stringValue.substr(0, position));
+        decimal = stringToInt(stringValue.substr(position+1, stringValue.length()));
+    }
+    else
+    {
+        wholeValue = stringToInt( stringValue.substr(0, stringValue.length()));
+    }
+
+    value = wholeValue;
+    value += ( (double)decimal / 100 );
+
+    return value;
 }
