@@ -5,6 +5,7 @@ Employee::Employee():
     m_employeeRecordset("Employees.txt", ";")
 {
     m_employeeRecordset.load();
+    m_employeeRecordset.setAutoIncrement(true);
 }
 
 Employee::~Employee()

@@ -1,2 +1,3 @@
 ID;First Name;Last Name;Phone Number;Address;Wage;Position;
 1;Chris;Tiller;304-961-0253;203 Presbyterian Avenue;10.00;Manager;
+2;Dylan;;;;7.25;;

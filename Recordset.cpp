@@ -171,7 +171,7 @@ int Recordset::getRow() const
     return m_currentRow;
 }
 
-void Recordset::addRow()
+void Recordset::addRow(bool readFromFile)
 {
 
 	if ( m_firstColumn == NULL )
@@ -188,6 +188,24 @@ void Recordset::addRow()
 	}
 
 	m_numRows++;
+
+	if ( m_autoIncrement && !(readFromFile) )
+    {
+        if ( columnExists("ID") )
+        {
+            if ( getRows() > 0)
+            {
+                movePrev();
+                int prevValue = fields("ID").toInt();
+                moveNext();
+                fields("ID") = prevValue + 1;
+            }
+            else
+            {
+                fields("ID") = 1;
+            }
+        }
+    }
 
 }
 
@@ -268,7 +286,7 @@ void Recordset::load()
 			else
             {
 
-				addRow();
+				addRow(true);
 
 				DataColumn* currentCol = m_firstColumn;
 
@@ -541,6 +559,7 @@ void Recordset::printRecordset(std::string args)
     }
 
     std::vector<ColumnRowIntersection> cRI;
+    int blankRowValues = 0;
 
     fillArgs(cRI, args);
 
@@ -565,6 +584,10 @@ void Recordset::printRecordset(std::string args)
 
     for ( int i = 0 ; i < cRI.size() ; i++ )
     {
+        if ( cRI.at(i).rowValue == "")
+        {
+            blankRowValues++;
+        }
         padding = (fields(cRI.at(i).columnName).getColWidth() - cRI.at(i).columnName.length())/2;
         totalWidth = fields(cRI.at(i).columnName).getColWidth();
 
@@ -590,29 +613,44 @@ void Recordset::printRecordset(std::string args)
     {
         moveFirst();
 
+        int counter = 0;
+
         while ( getRow() <= getRows() )
         {
+            counter = 0;
 
-            for ( int i = 0 ; i < cRI.size() ; i++ )
+            for ( int i = 0 ; i < cRI.size() ; i++)
             {
-                // Prints out the current row information
-                std::cout << fields(cRI.at(i).columnName) << std::string( fields(cRI.at(i).columnName).getColWidth() - fields(cRI.at(i).columnName).getRowText().length(), ' ' );
-                // Depending on the column your on, it will print a "|" or " ", with the " " signifying your at the end of the row
-                if ( i != ( cRI.size() - 1 ) )
+                if ( ( fields(cRI.at(i).columnName) == cRI.at(i).rowValue ) || ( cRI.at(i).rowValue == "" ) )
                 {
-                    std::cout << "|";
+                    counter++;
                 }
-                else
-                {
-                    std::cout << " ";
-                }
+
             }
-            std::cout << std::endl;
-            if ( getRow() != getRows() )
+
+            if (  counter  ==  cRI.size()  )
             {
+                for ( int i = 0 ; i < cRI.size() ; i++ )
+                {
+                    // Prints out the current row information
+                    std::cout << fields(cRI.at(i).columnName) << std::string( fields(cRI.at(i).columnName).getColWidth() - fields(cRI.at(i).columnName).getRowText().length(), ' ' );
+                    // Depending on the column your on, it will print a "|" or " ", with the " " signifying your at the end of the row
+                    if ( i != ( cRI.size() - 1 ) )
+                    {
+                        std::cout << "|";
+                    }
+                    else
+                    {
+                        std::cout << " ";
+                    }
+                }
+                std::cout << std::endl;
+            }
+            //if ( getRow() != getRows() )
+            //{
                 // Prints out the row separator
                 //std::cout  << std::string ( getRowLength(cRI) + cRI.size() , '-') << std::endl;
-            }
+            //}
 
             moveNext();
         }
@@ -655,8 +693,16 @@ void fillArgs(std::vector<ColumnRowIntersection>& vecArgs, std::string args)
         }
         else
         {
-            cRI.columnName = trim(args.substr(0, colonPosition ));
-            cRI.rowValue = trim(args.substr(colonPosition+1, commaPosition - colonPosition - 1 ));
+            if ( commaPosition < colonPosition )
+            {
+                cRI.columnName = trim(args.substr(0, commaPosition ));
+                cRI.rowValue = "";
+            }
+            else
+            {
+                cRI.columnName = trim(args.substr(0, colonPosition ));
+                cRI.rowValue = trim(args.substr(colonPosition+1, commaPosition - colonPosition - 1 ));
+            }
         }
         vecArgs.push_back(cRI);
         args.erase(0, commaPosition + 1 );
@@ -679,31 +725,62 @@ void fillArgs(std::vector<ColumnRowIntersection>& vecArgs, std::string args)
     }
 }
 
-// Returns a trimmed string so that there are no beginning or ending spaces
-std::string trim(std::string stringToTrim)
+bool Recordset::containsRow(std::vector<ColumnRowIntersection> cRI)
 {
-    if ( stringToTrim.length() == 0 )
-	{
-		return "";
-	}
 
-    int position = 0;
+    moveFirst();
 
-    while ( ( position < stringToTrim.length() ) && ( stringToTrim[position] == ' ' ) )
+    int counter = 0;
+
+    while ( getRow() <= getRows() )
     {
-        position++;
+        counter = 0;
+
+        for ( int i = 0 ; i < cRI.size() ; i++ )
+        {
+            if ( fields(cRI.at(i).columnName) == cRI.at(i).rowValue )
+            {
+                counter++;
+            }
+        }
+
+        if ( counter == cRI.size() )
+        {
+            return true;
+        }
+        moveNext();
     }
 
-    stringToTrim = stringToTrim.erase(0, position);
+    return false;
 
-    position = stringToTrim.length();
+}
 
-    while ( ( position >= 0 ) && ( stringToTrim[position-1] == ' ' ) )
+bool Recordset::containsRow(std::string column, std::string rowValue)
+{
+
+    moveFirst();
+
+    int counter = 0;
+
+    while ( getRow() <= getRows() )
     {
-        position--;
+        if ( fields(column) == rowValue )
+        {
+            return true;
+        }
+        moveNext();
     }
 
-    stringToTrim = stringToTrim.erase(position, stringToTrim.length());
+    return false;
 
-    return stringToTrim;
+}
+
+bool Recordset::isAutoIncrement()
+{
+    return m_autoIncrement;
+}
+
+void Recordset::setAutoIncrement(bool autoIncrement)
+{
+    m_autoIncrement = autoIncrement;
 }

@@ -45,6 +45,8 @@ public:
 	int getColWidth();
 	void recalculateRowLength();
 
+	int toInt();
+    double toDouble();
 
     void operator=(const std::string);
     void operator=(const int);

@@ -40,12 +40,18 @@
 		<Unit filename="DataRow.h" />
 		<Unit filename="Employee.cpp" />
 		<Unit filename="Employee.h" />
+		<Unit filename="Payroll.cpp" />
+		<Unit filename="Payroll.h" />
 		<Unit filename="Recordset.cpp" />
 		<Unit filename="Recordset.h" />
 		<Unit filename="RecordsetExample.cpp">
 			<Option compile="0" />
 			<Option link="0" />
 		</Unit>
+		<Unit filename="Scheduling.cpp" />
+		<Unit filename="Scheduling.h" />
+		<Unit filename="helperFile.cpp" />
+		<Unit filename="helperFile.h" />
 		<Unit filename="main.cpp" />
 		<Unit filename="recordsetExaple.cpp" />
 		<Extensions>
