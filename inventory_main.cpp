@@ -1,4 +1,5 @@
 #include"inventory.h"
+#include"inventory.cpp"
 
 int main()
 {
