@@ -50,8 +50,6 @@ public:
     void operator=(const int);
     void operator=(const double);
     DataColumn& operator=(const DataColumn&);
-    //operator string() const;
-    //operator int() const;
 	bool operator==(std::string);
 	bool operator!=(std::string);
 	friend std::ostream& operator << (std::ostream&, const DataColumn&);

@@ -1,5 +1,2 @@
-ID;First Name;Last Name;Phone Number;Address;Wage;Position;Removed;
-1;Chris;Tiler;;;;;;
-2;Dhiraj;;;;;;;
-;Muath;Aldhubayb;;;7.25;Manager;;
-4;Lonnie;;;;;;;
+ID;First Name;Last Name;Phone Number;Address;Wage;Position;
+1;Chris;Tiller;304-961-0253;203 Presbyterian Avenue;10.00;Manager;
