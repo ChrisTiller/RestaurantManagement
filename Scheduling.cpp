@@ -65,12 +65,24 @@ void Schedules::viewCalendar(Date calendarMonth)
 
         dateField.push_back(temp);
 
+        string hourCorrector, nextHourCorrector;
 
         if ( !m_scheduleDetail.containsRow(dateField) )
         {
             for ( int i = 1 ; i < 24 ; i++ )
             {
-                std::cout << i << ":00-" << i+1 << ":00" << std::endl;
+                if ( i < 10  )
+                {
+                    hourCorrector = "0";
+                }
+                if ( (i+1) < 10 )
+                {
+                    nextHourCorrector = "0";
+                }
+                std::cout << hourCorrector << i << ":00-" << nextHourCorrector << i+1 << ":00" << std::endl;
+
+                hourCorrector = "";
+                nextHourCorrector = "";
             }
 
             scheduleEmployees();
@@ -88,14 +100,29 @@ void Schedules::viewCalendar(Date calendarMonth)
 
                 dateField.push_back(time);
 
+                if ( i < 10 )
+                {
+                    hourCorrector = "0";
+                }
+                if ( (i+1) < 10 )
+                {
+                    nextHourCorrector = "0";
+                }
+
                 if (  m_scheduleDetail.containsRow(dateField) )
                 {
-                    std::cout << i << ":00-" << i+1 << ":00" << " " << m_scheduleDetail.fields("First Name") << " " << m_scheduleDetail.fields("Last Name") << std::endl;
+                    if ( m_employees.containsRow("ID", m_scheduleDetail.fields("EmployeeID").getRowText() ))
+                    {
+                            std::cout << hourCorrector << i << ":00-" << nextHourCorrector << i+1 << ":00" << " " << m_employees.fields("First Name") << " " << m_employees.fields("Last Name") << std::endl;
+                    }
                 }
                 else
                 {
-                    std::cout << i << ":00-" << i+1 << ":00" << std::endl;
+                    std::cout << hourCorrector << i << ":00-" << nextHourCorrector << i+1 << ":00" << std::endl;
                 }
+
+                hourCorrector = "";
+                nextHourCorrector = "";
             }
 
             scheduleEmployees();
@@ -249,7 +276,32 @@ void Schedules::scheduleEmployees()
         }
         else if ( userCommand.mainCommand == "remove" )
         {
+            std::vector<ColumnRowIntersection> cRI;
 
+            fillArgs(cRI, userCommand.commandArguments);
+
+            if ( cRI.size() > 1 )
+            {
+                std::cout << "Too many arguments" << std::endl;
+                canContinue = false;
+            }
+
+            if ( cRI.at(0).columnName != "Time" )
+            {
+                std::cout << "Need time column" << std::endl;
+                canContinue = false;
+            }
+
+            if ( ( m_cal.stringToInt(cRI.at(0).rowValue) < 0 ) || ( m_cal.stringToInt(cRI.at(0).rowValue) > 25 ) )
+            {
+                std::cout << "Invalid work time" << std::endl;
+                canContinue = false;
+            }
+
+            if ( canContinue )
+            {
+
+            }
         }
         else if ( userCommand.mainCommand == "calendar" )
         {

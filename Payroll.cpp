@@ -32,9 +32,9 @@ void Payroll::completePayroll(string args)
         {
             if ( m_schedule.fields("Payed") == "No")
             {
-                if ( m_employees.containsRow("ID", m_schedule.fields("EmployeeID").getRowText()))
+                if ( m_employees.containsRow("ID", m_schedule.fields("EmployeeID").getRowText()) )
                 {
-                    if ( !m_payroll.containsRow("EmployeeID",m_schedule.fields("EmployeeID").getRowText() ))
+                    if ( !m_payroll.containsRow("ID", m_dateFromString + m_dateThroughString + m_schedule.fields("EmployeeID").getRowText() ))
                     {
                         m_payroll.addRow();
 
@@ -202,7 +202,6 @@ void Payroll::fillDates(Date& dateFrom, Date& dateThrough, string& args)
         cout << "Invalid Date" << endl;
     }
 
-
 }
 
 bool Payroll::isInDateRange(string date)
@@ -210,8 +209,10 @@ bool Payroll::isInDateRange(string date)
     Date dateToCompare;
 
     dateToCompare.day = stringToInt(date.substr(0, 2));
-    dateToCompare.month = stringToInt(date.substr(2, 3));
-    dateToCompare.year = stringToInt(date.substr(3, date.length()));
+    date = date.erase(0, 2);
+    dateToCompare.month = stringToInt(date.substr(0, 2));
+    date = date.erase(0, 2);
+    dateToCompare.year = stringToInt(date.substr(0, date.length()));
 
     if ( ( dateToCompare.year >= m_dateFrom.year ) && ( dateToCompare.year <= m_dateThrough.year ) )
     {
@@ -268,7 +269,7 @@ void Payroll::makeChanges()
 
     system("cls");
 
-    string columns = "EmployeeID, Name, Wage, Hours Worked, Hours Payed, Payed Amount";
+    string columns = "Pay Period:" + m_dateFromString + m_dateThroughString + ", EmployeeID, Name, Wage, Hours Worked, Hours Payed, Payed Amount";
 
     m_payroll.printRecordset(columns);
 
@@ -293,6 +294,11 @@ void Payroll::makeChanges()
         {
             system("cls");
             m_payroll.printRecordset(columns);
+        }
+        else if ( userCommand.mainCommand == "cancel" )
+        {
+            m_payroll.removeRow();
+            done = true;
         }
         else if ( userCommand.mainCommand == "help" )
         {
@@ -348,7 +354,7 @@ void Payroll::editPayroll(string args)
     while ( m_payroll.getRow() <= m_payroll.getRows() )
     {
 
-        if ( m_payroll.fields(cRI.at(0).columnName) == cRI.at(0).rowValue )
+        if ( m_payroll.fields("ID") ==  m_dateFromString + m_dateThroughString + cRI.at(0).rowValue )
         {
 
             m_payroll.fields("Hours Payed") = cRI.at(1).rowValue;
