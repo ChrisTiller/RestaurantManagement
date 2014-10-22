@@ -1,3 +1,0 @@
-FNAME;LNAME;
-Chris;Tiller;
-Dylan;Kiser;
