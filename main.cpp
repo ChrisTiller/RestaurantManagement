@@ -5,6 +5,7 @@
 #include "Scheduling.h"
 #include "helperFile.h"
 #include "Payroll.h"
+#include "Casher/Casher/orders.h"
 #include <cassert>
 #include <math.h>
 #include <cstdlib>
