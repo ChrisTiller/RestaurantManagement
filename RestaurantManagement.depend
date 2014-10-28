@@ -40,7 +40,7 @@
 	<cmath>
 	<vector>
 
-1413813748 source:c:\users\chris\documents\github\restaurantmanagement\recordset.cpp
+1414088074 source:c:\users\chris\documents\github\restaurantmanagement\recordset.cpp
 	"Recordset.h"
 	<iostream>
 	<string>
@@ -65,7 +65,7 @@
 	<iostream>
 	<vector>
 
-1412980789 source:c:\users\chris\documents\github\restaurantmanagement\recordsetexaple.cpp
+1414000316 source:c:\users\chris\documents\github\restaurantmanagement\recordsetexaple.cpp
 
 1414088074 source:c:\users\chris\documents\github\restaurantmanagement\calendar.cpp
 	"Calendar.h"
@@ -83,7 +83,7 @@
 	"Calendar.h"
 	"Recordset.h"
 
-1413904293 source:c:\users\chris\documents\github\restaurantmanagement\scheduling.cpp
+1414088074 source:c:\users\chris\documents\github\restaurantmanagement\scheduling.cpp
 	"Scheduling.h"
 	"helperFile.h"
 	<cstdlib>
@@ -101,9 +101,36 @@
 	<iostream>
 	<cstdlib>
 
-1413903222 source:c:\users\chris\documents\github\restaurantmanagement\payroll.cpp
+1414088074 source:c:\users\chris\documents\github\restaurantmanagement\payroll.cpp
 	"Payroll.h"
 	<vector>
 
 1414000360 c:\users\chris\documents\github\restaurantmanagement\casher\casher\orders.h
+
+1414516131 source:c:\users\chris\documents\github\restaurantmanagement\inventory_main.cpp
+	"inventory.h"
+
+1414422168 c:\users\chris\documents\github\restaurantmanagement\inventory.h
+	<iostream>
+	<windows.h>
+	<conio.h>
+	<iomanip>
+	<limits>
+	<fstream>
+
+1414516157 source:c:\users\chris\documents\github\restaurantmanagement\mainmuath.cpp
+	<iostream>
+	"menu.h"
+	"orders.h"
+
+1414508242 c:\users\chris\documents\github\restaurantmanagement\menu.h
+	<iostream>
+	<fstream>
+	<string.h>
+	<cstdlib>
+
+1414508242 c:\users\chris\documents\github\restaurantmanagement\orders.h
+	<iostream>
+	<fstream>
+	<string.h>
 
