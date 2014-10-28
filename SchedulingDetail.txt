@@ -3,7 +3,6 @@ ID;Date;EmployeeID;First Name;Last Name;Time;
 2;08102014;2;Dylan;;9;
 3;08102014;2;Dylan;;10;
 4;08102014;2;Dylan;;11;
-5;08102014;1;Chris;Tiller;7;
 6;08102014;1;Chris;Tiller;12;
 7;08102014;1;Chris;Tiller;13;
 8;09102014;1;Chris;Tiller;8;

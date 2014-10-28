@@ -8,14 +8,14 @@ void mainMenu()
 	cout<<"Press 1 for Cashier\n";
 	cout<<"Press 2 for Admin\n";
 }
-void restaturantMenuConfigurationsMenu()
-{
-	cout<<"Press 1 to Add New Menu Item\n";
-	cout<<"Press 2 to Display All Menu Items\n";
-	cout<<"Press 3 to Delete A Menu Item\n";
-	cout<<"Press 4 to Modify a Menu Item\n";
-	cout<<"Any other key to exit\n";
-}
+//void restaturantMenuConfigurationsMenu()//
+//{//
+//	cout<<"Press 1 to Add New Menu Item\n";//
+//	cout<<"Press 2 to Display All Menu Items\n";//
+//	cout<<"Press 3 to Delete A Menu Item\n";//
+//	cout<<"Press 4 to Modify a Menu Item\n";//
+//	cout<<"Any other key to exit\n";//
+//}
 
 //int main()
 //{//
@@ -117,10 +117,7 @@ void restaturantMenuConfigurationsMenu()
 //			exit(1);//
 //			break;//
 //		}//
-//	}//
-////
-////
-////
+//	}
 //    return 0;//
 ////
 //}
