@@ -1,0 +1,3 @@
+1/apple/40
+2/salad/13
+3/juice/90
