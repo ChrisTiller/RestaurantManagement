@@ -9,16 +9,20 @@
 #include <cassert>
 #include <math.h>
 #include <cstdlib>
+#include"inventory.h"
 
 using namespace std;
 
 void Employees();
 void Scheduling();
 void Payrolls();
-
+void Open_inventory();
+Inventory open;
 int main()
 {
 
+    cout << setprecision(2) << fixed << endl;  // set decimal to two decimal places
+	system("mode con cols=80 lines=43");  // resizing the console window
     bool done = false;
 
     string rawInput;
@@ -26,11 +30,12 @@ int main()
     while (!done)
     {
         system("cls");
-
+        open.welcomeMessage();
         cout << "Program Options" << endl;
         cout << "Employees" << endl;
         cout << "Scheduling" << endl;
         cout << "Payroll" << endl;
+        cout << "Inventory" << endl;
 
         cout << "Select the name of the option you want to go to: ";
         getline(cin, rawInput);
@@ -51,6 +56,11 @@ int main()
         {
             Payrolls();
         }
+        else if ( userCommand.mainCommand == "Inventory" )
+        {
+            Open_inventory();
+        }
+
         else if ( userCommand.mainCommand == "exit" )
         {
             done = true;
@@ -209,4 +219,10 @@ void Employees()
     }
 
     return;
+}
+
+void Open_inventory()
+{
+    open.menu_Display();
+
 }

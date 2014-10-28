@@ -17,7 +17,7 @@
 1414000316 source:c:\users\chris\documents\github\restaurantmanagement\datarow.cpp
 	"DataRow.h"
 
-1414090228 source:c:\users\chris\documents\github\restaurantmanagement\main.cpp
+1414521518 source:c:\users\chris\documents\github\restaurantmanagement\main.cpp
 	<iostream>
 	"Recordset.h"
 	"Employee.h"
@@ -29,6 +29,7 @@
 	<cassert>
 	<math.h>
 	<cstdlib>
+	"inventory.h"
 
 1414088074 c:\users\chris\documents\github\restaurantmanagement\recordset.h
 	"DataColumn.h"
@@ -107,10 +108,10 @@
 
 1414000360 c:\users\chris\documents\github\restaurantmanagement\casher\casher\orders.h
 
-1414516131 source:c:\users\chris\documents\github\restaurantmanagement\inventory_main.cpp
+1414516772 source:c:\users\chris\documents\github\restaurantmanagement\inventory_main.cpp
 	"inventory.h"
 
-1414422168 c:\users\chris\documents\github\restaurantmanagement\inventory.h
+1414521694 c:\users\chris\documents\github\restaurantmanagement\inventory.h
 	<iostream>
 	<windows.h>
 	<conio.h>
@@ -118,7 +119,7 @@
 	<limits>
 	<fstream>
 
-1414516157 source:c:\users\chris\documents\github\restaurantmanagement\mainmuath.cpp
+1414516772 source:c:\users\chris\documents\github\restaurantmanagement\mainmuath.cpp
 	<iostream>
 	"menu.h"
 	"orders.h"
