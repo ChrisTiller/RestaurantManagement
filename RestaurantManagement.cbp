@@ -52,11 +52,11 @@
 		<Unit filename="Scheduling.h" />
 		<Unit filename="helperFile.cpp" />
 		<Unit filename="helperFile.h" />
+		<Unit filename="inventory.h" />
 		<Unit filename="main.cpp" />
 		<Unit filename="mainMuath.cpp" />
 		<Unit filename="menu.h" />
 		<Unit filename="orders.h" />
-		<Unit filename="recordsetExaple.cpp" />
 		<Extensions>
 			<code_completion />
 			<envvars />

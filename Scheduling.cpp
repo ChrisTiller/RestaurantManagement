@@ -298,9 +298,48 @@ void Schedules::scheduleEmployees()
                 canContinue = false;
             }
 
+
+
             if ( canContinue )
             {
 
+                std::string monthCorrector = "";
+                std::string dayCorrector = "";
+                if ( currentDate.month < 10 )
+                {
+                    monthCorrector = "0";
+                }
+                if ( currentDate.day < 10 )
+                {
+                    dayCorrector = "0";
+                }
+
+                ColumnRowIntersection temp;
+
+                temp.columnName = "Date";
+
+                temp.rowValue = dayCorrector + m_cal.intToString(currentDate.day) + monthCorrector + m_cal.intToString(currentDate.month) + m_cal.intToString(currentDate.year);
+
+                cRI.push_back(temp);
+
+                if ( m_scheduleDetail.containsRow(cRI))
+                {
+                    if ( m_scheduleHeader.containsRow("ID", temp.rowValue + m_scheduleDetail.fields("EmployeeID").getRowText()))
+                    {
+                        if ( m_scheduleDetail.fields("Hours Work") == "1" )
+                        {
+                            m_scheduleHeader.removeRow();
+                        }
+                        else
+                        {
+                            m_scheduleHeader.fields("Hours Worked") = m_scheduleHeader.fields("Hours Worked").toInt() - 1;
+                        }
+
+                        m_scheduleHeader.write();
+                    }
+                    m_scheduleDetail.removeRow();
+                    m_scheduleDetail.write();
+                }
             }
         }
         else if ( userCommand.mainCommand == "calendar" )

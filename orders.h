@@ -60,8 +60,7 @@ public:
 		}
 		cout<<"\nTotal Amount Payable: "<<orderTotal<<endl<<endl;
 	}
-	
-	
+
 };
 
 
